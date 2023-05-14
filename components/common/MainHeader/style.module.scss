@@ -1,0 +1,10 @@
+.container{
+    height: 90px;
+    display: flex;
+    background: lightblue;
+    .menu{
+        display: flex;
+        align-items: center;
+        gap: 24px;
+    }
+}

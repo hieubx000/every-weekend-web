@@ -1,10 +1,22 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import MainLayout from '@/components/layouts/MainLayout'
-
+import Head from "next/head";
+import Image from "next/image";
+import { Inter, Tourney } from "next/font/google";
+import MainLayout from "@/components/layouts/MainLayout";
+import Slider from "react-slick";
+import HoiAn from "@assets/images/hoi-an.png";
+import Banner from "@assets/images/banner.png";
+import TopBar from "@/components/common/TopBar";
+import HomeBanner from "@/components/common/HomeBanner";
 
 export default function Home() {
+  var settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    focusOnSelect: true,
+  };
   return (
     <>
       <Head>
@@ -13,7 +25,18 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <MainLayout></MainLayout>
+      <MainLayout>
+        <HomeBanner/>
+        
+        {/* <div>
+          <div style={{width: "40%"}}>
+            <Image src={Banner} alt="" />
+          </div>
+          <div style={{width: "40%"}}>
+            <Image src={Banner} alt="" />
+          </div>
+        </div> */}
+      </MainLayout>
     </>
-  )
+  );
 }

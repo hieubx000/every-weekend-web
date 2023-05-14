@@ -1,5 +1,11 @@
+@import 'customAntd/customAntd.scss';
+@import 'customAntd/tabs.scss';
+@import 'customAntd/input.scss';
+
 :root {
-  --primary-color: #FF5B00;
+  --primary-color: #3b71fe;
+  --black: #161616;
+  --white: #fff;
 }
 
 * {
@@ -8,8 +14,16 @@
   margin: 0;
 }
 
-
 a {
   color: inherit;
   text-decoration: none;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+div::selection {
+  background-color: yellow;
+}
+
