@@ -1,0 +1,18 @@
+.container {
+    margin-top: 150px;
+    display: flex;
+    justify-content: center;
+
+    img{
+        max-width: 660px;
+        padding: 12px;
+        object-fit: cover;
+        width: 100%;
+        transform: scale(1);
+        transition: 0.3s ease-in-out;
+        height: auto;
+    }
+    img:hover{
+        transform: scale(1.05);
+    }
+}

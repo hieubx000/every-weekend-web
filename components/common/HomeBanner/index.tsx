@@ -154,12 +154,6 @@ const HomeBanner: FC<Props> = ({}) => {
               <img src="/assets/icons/search.svg" width={20} alt="" />
               Tìm kiếm
             </div>
-
-            {/* <Form.Item >
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-            </Form.Item> */}
           </Form>
         </div>
       ),
@@ -172,7 +166,77 @@ const HomeBanner: FC<Props> = ({}) => {
           <div>Khách sạn</div>
         </div>
       ),
-      children: <div className={styles.tabs__children}>Khách sạn</div>,
+      children: <div className={styles.tabs__children}>
+      <Form
+        className={styles.tabs__children__form}
+        name="basic"
+        // labelCol={{ span: 8 }}
+        // wrapperCol={{ span: 16 }}
+        // style={{ maxWidth: 600 }}
+        initialValues={{ remember: true }}
+        // onFinish={onFinish}
+        // onFinishFailed={onFinishFailed}
+        autoComplete="off">
+        <Form.Item
+          className={styles.tabs__children__form__item}
+          name="diemDi"
+          rules={[{ required: true, message: "" }]}>
+          <Select
+            placeholder="Chọn điểm đến"
+            allowClear
+            showSearch
+            // filterOption={filterSelectOption}
+          >
+            <Select.Option value="Hanoi">Hà Nội</Select.Option>
+            <Select.Option value="Thainguyen">Thái Nguyên</Select.Option>
+          </Select>
+        </Form.Item>
+        <img src="/assets/icons/two-way.svg" width={24} alt="" />
+        <Form.Item
+          className={styles.tabs__children__form__item}
+          name="diemDen"
+          rules={[{ required: true, message: "" }]}>
+          <Select
+            placeholder="Chọn điểm đến"
+            allowClear
+            showSearch
+            // filterOption={filterSelectOption}
+          >
+            <Select.Option value="Hanoi">Hà Nội</Select.Option>
+            <Select.Option value="Thainguyen">Thái Nguyên</Select.Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          name="startDate"
+          className={styles.tabs__children__form__item}
+          rules={[{ required: true, message: "" }]}>
+          <DatePicker format={dateFormat} />
+        </Form.Item>
+
+        <Form.Item
+          className={styles.tabs__children__form__item}
+          name="soNgay"
+          rules={[{ required: true, message: "" }]}>
+          <Select
+            placeholder="Chọn số ngày"
+            allowClear
+            showSearch
+            // filterOption={filterSelectOption}
+          >
+            <Select.Option value="All">Tất cả</Select.Option>
+            <Select.Option value="1">1-3 ngày</Select.Option>
+            <Select.Option value="2">3-5 ngày</Select.Option>
+            <Select.Option value="3">1 tuần</Select.Option>
+          </Select>
+        </Form.Item>
+
+        <div className={styles.tabs__children__form__searchBtn}>
+          <img src="/assets/icons/search.svg" width={20} alt="" />
+          Tìm kiếm
+        </div>
+      </Form>
+    </div>,
     },
     {
       key: "3",
@@ -201,7 +265,7 @@ const HomeBanner: FC<Props> = ({}) => {
       <div className={`${styles.banner_wrap}`}>
         <div className={styles.banner_wrap__img}>
           {homeBanners.length ? (
-            <Slider {...sliderSettings} className="home_banner">
+            <Slider {...sliderSettings}>
               {homeBanners.map((item) => (
                 <div key={item.id}>
                   <div className="cursor-pointer" rel="noreferrer">

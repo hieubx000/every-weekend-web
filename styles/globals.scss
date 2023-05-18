@@ -1,17 +1,41 @@
-@import 'customAntd/customAntd.scss';
-@import 'customAntd/tabs.scss';
-@import 'customAntd/input.scss';
+@import "customAntd/customAntd.scss";
+@import "customAntd/tabs.scss";
+@import "customAntd/input.scss";
 
 :root {
   --primary-color: #3b71fe;
+  --secondary-color: #ff8500;
   --black: #161616;
   --white: #fff;
+  --bg-color: #f5f5f5;
+  --white-color: #fff;
+  --black-color: #000;
+  --red-color: #e6161a;
+  --green-color: #06983c;
+  --gray-color: #d3d3d3;
+  --tertiary-color: #f1f1f1;
+  --sources-color: #838383;
+  --urgent-color: #c9292b;
+  --border-color: #dcdcdc;
+  --bg-item-color: #f5f5f5;
+  --primary-color-hover: #7115b7;
+  --secondary-15-color: #ffedd9;
+  --red-15-color: #e6161a26;
+
+  --border-radius: 7px;
+  --border-2x-radius: 14px;
+  --border-3x-radius: 21px;
+  --primary-color-rgb: 73, 43, 124;
+  --secondary-color-rgb: 255, 133, 0;
+  --color-alpha: 0.2;
+ 
 }
 
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  font-family: Roboto, Helvetica, sans-serif;
 }
 
 a {
@@ -26,4 +50,3 @@ a {
 div::selection {
   background-color: yellow;
 }
-
