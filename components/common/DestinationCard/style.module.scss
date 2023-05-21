@@ -1,0 +1,16 @@
+.container{
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    img{
+        border-radius: 99em;
+    }
+
+    .title{
+        color: var(--black-color);
+        font-weight: 700;
+        font-size: 24px;
+    }
+}

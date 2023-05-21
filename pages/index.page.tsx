@@ -1,8 +1,11 @@
 import Head from "next/head";
 import MainLayout from "@/components/layouts/MainLayout";
-import HomeBanner from "@/components/common/HomeBanner";
-import HomePromotion from "@/components/common/HomePromotion";
-import HomeDestinations from "@/components/common/HomeDestinations";
+import {
+  HomeBanner,
+  HomePromotion,
+  HomeDestinations,
+} from "@/modules/HomePage";
+import HomeTours from "@/modules/HomePage/HomeTours";
 
 export default function Home() {
   return (
@@ -14,10 +17,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MainLayout>
-        <HomeBanner/>
-        <HomePromotion/>
-        {/* <HomeDestinations/> */}
-        
+          <HomeBanner />
+          <HomePromotion />
+          <HomeDestinations />
+          <HomeTours/>
       </MainLayout>
     </>
   );
