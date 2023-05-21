@@ -19,20 +19,32 @@ const useHeader = () => {
   const headerMenu = useMemo(() => {
     return role === Role.customer
       ? [
+        {
+          text: "Điểm đến",
+          href: routerPathConstant.homepage,
+          active: router.pathname.includes(routerPathConstant.homepage),
+        },
           {
-            text: "Tour du lịch",
-            href: routerPathConstant.homepage,
+            text: "Dịch vụ",
+            href: "",
             active: router.pathname.includes(routerPathConstant.homepage),
-          },
-          {
-            text: "Khách sạn",
-            href: routerPathConstant.homepage,
-            active: router.pathname.includes(routerPathConstant.homepage),
-          },
-          {
-            text: "Vé máy bay",
-            href: routerPathConstant.homepage,
-            active: router.pathname.includes(routerPathConstant.homepage),
+            children: [
+              {
+                text: "Tour du lịch",
+                href: routerPathConstant.tours,
+                active: router.pathname.includes(routerPathConstant.tours),
+              },
+              {
+                text: "Khách sạn",
+                href: routerPathConstant.hotels,
+                active: router.pathname.includes(routerPathConstant.hotels),
+              },
+              {
+                text: "Vé máy bay",
+                href: routerPathConstant.homepage,
+                active: router.pathname.includes(routerPathConstant.homepage),
+              },
+            ],
           },
           {
             text: "Blog",

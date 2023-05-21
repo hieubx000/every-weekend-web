@@ -1,4 +1,5 @@
 import { Role } from "@/types/common";
+import moment from "moment";
 
 export const convertRoleEnumToName = (role: Role) => {
   switch (role) {
@@ -11,4 +12,17 @@ export const convertRoleEnumToName = (role: Role) => {
     case Role.admin:
       return "Quản trị viên";
   }
+};
+
+export const convertTimeToDate = (timestamp: number) => {
+  const date = moment.unix(timestamp).format("DD/MM/YYYY");
+
+  return date;
+};
+
+export const numberFormatter = (value: number) => {
+  const numberFormatter = Intl.NumberFormat("en-US");
+  const formatted = numberFormatter.format(value);
+
+  return formatted;
 };

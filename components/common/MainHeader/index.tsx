@@ -234,28 +234,29 @@ const MainHeader: FC<Props> = () => {
           <div className={styles.header_navigator}>
             {headerMenu.map((item, i) => (
               <div className={styles.menu} key={i}>
-                {/* {!item.children ? ( */}
-                <LinkTo href={item.href} className={styles.link}>
-                  {item.text}
-                </LinkTo>
-                {/* ) : (
+                {!item.children ? (
+                  <LinkTo href={item.href} className={styles.link}>
+                    {item.text}
+                  </LinkTo>
+                ) : (
                   <Popover
                     placement="bottom"
                     content={
                       <div>
-                        <div className={styles.link_popover}>
-                          <a href="/blogs?type=employer">Cho nhà tuyển dụng</a>
-                        </div>
-                        <div className={styles.link_popover}>
-                          <a href="/blogs?type=employee">Cho ứng viên</a>
-                        </div>
+                        {item.children.map((it, index) => (
+                          <div key={index} className={styles.link_popover}>
+                            <a href={it.href}>
+                              {it.text}
+                            </a>
+                          </div>
+                        ))}
                       </div>
                     }>
                     <div className={styles.link}>
                       <a>{item.text}</a>
                     </div>
                   </Popover>
-                )} */}
+                )}
               </div>
             ))}
           </div>
