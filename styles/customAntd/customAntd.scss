@@ -1,9 +1,13 @@
-.home_banner .slick-dots{
-    bottom: 15px;
-    left: 20px;
-    text-align: unset;
-    li.slick-active button:before {
-      opacity: 0.75;
-      color: var(--secondary-color);
-    }
+.home_banner .slick-dots {
+  bottom: 15px;
+  left: 20px;
+  text-align: unset;
+  li.slick-active button:before {
+    opacity: 0.75;
+    color: var(--secondary-color);
   }
+}
+
+.ant-list{
+  background: var(--white);
+}

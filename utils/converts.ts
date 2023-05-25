@@ -14,8 +14,14 @@ export const convertRoleEnumToName = (role: Role) => {
   }
 };
 
-export const convertTimeToDate = (timestamp: number) => {
+export const convertTimestampToDate = (timestamp: number) => {
   const date = moment.unix(timestamp).format("DD/MM/YYYY");
+
+  return date;
+};
+
+export const convertTimestampToDateTime = (timestamp: number) => {
+  const date = moment.unix(timestamp).format("hh:mm - DD/MM/YYYY");
 
   return date;
 };

@@ -1,7 +1,14 @@
 import { FC, memo, useCallback, useState } from "react";
 
 import styles from "./style.module.scss";
-import { DatePicker, Radio, RadioChangeEvent, Select, Slider, Space } from "antd";
+import {
+  DatePicker,
+  Radio,
+  RadioChangeEvent,
+  Select,
+  Slider,
+  Space,
+} from "antd";
 import { numberFormatter } from "@/utils/converts";
 
 type Props = {};
@@ -21,8 +28,8 @@ const TourSideBar: FC<Props> = ({}) => {
   return (
     <div className={styles.container}>
       <div className={styles.sort}>
-        <div>Sắp xếp kết quả</div>
-        <div>Sắp xếp theo kết quả lựa chọn</div>
+        <div className={styles.sort_title}>Sắp xếp kết quả</div>
+        <div className={styles.sort_desp}>Sắp xếp theo kết quả lựa chọn</div>
         <Radio.Group onChange={onChangeSort} value={sort}>
           <Space direction="vertical">
             <Radio value={1}>Giá cao nhất</Radio>
@@ -34,7 +41,7 @@ const TourSideBar: FC<Props> = ({}) => {
       </div>
 
       <div className={styles.filter}>
-        <div>Bộ lọc kết quả</div>
+        <div className={styles.filter_title}>Bộ lọc kết quả</div>
 
         <div className={styles.filter_price}>
           <Slider range defaultValue={price} onChange={onChangeSliderPrice} />
@@ -58,27 +65,28 @@ const TourSideBar: FC<Props> = ({}) => {
           </div>
         </div>
 
-        <div>
-          <div>Điểm đi</div>
-          <Select style={{ width: "100%" }}></Select>
+        <div className={styles.filter_item}>
+          <div className={styles.filter_item_title}>Ngày đi</div>
+          <DatePicker placeholder="Chọn ngày đi" />
         </div>
-        <div>
-          <div>Điểm đến</div>
-          <Select style={{ width: "100%" }}></Select>
-        </div>
-        <div>
-          <div>Số ngày</div>
-          <div>
-            <div>1-3 ngày</div>
-            <div>4-7 ngày</div>
-            <div>8-14 ngày</div>
-            <div>trên 14 ngày</div>
+
+        <div className={styles.filter_item}>
+          <div className={styles.filter_item_title}>Số ngày</div>
+          <div className={styles.filter_box}>
+            <div className={styles.filter_box_item}>1 - 3 ngày</div>
+            <div className={styles.filter_box_item}>4 - 7 ngày</div>
+            <div className={styles.filter_box_item}>8 - 14 ngày</div>
+            <div className={styles.filter_box_item}>trên 14 ngày</div>
           </div>
         </div>
 
-        <div>
-            <div>Ngày đi</div>
-            <DatePicker/>
+        <div className={styles.filter_item}>
+          <div className={styles.filter_item_title}>Điểm đi</div>
+          <Select style={{ width: "100%" }} placeholder="Chọn điểm đi"></Select>
+        </div>
+        <div className={styles.filter_item}>
+          <div className={styles.filter_item_title}>Điểm đến</div>
+          <Select style={{ width: "100%" }} placeholder="Chọn điểm đến"></Select>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import { FC, memo, useState } from "react";
 
 import styles from "./style.module.scss";
 import MainLayout from "@/components/layouts/MainLayout";
-import TourSidebar from "@/modules/Services/TourSidebar";
+import TourSidebar from "@/modules/Services/Tours/TourSidebar";
 import { CiGrid2H, CiGrid41 } from "react-icons/ci";
 import { Mock_Data_Tours } from "@/public/assets/mockData/tour";
 import TourCard from "@/components/common/TourCard";

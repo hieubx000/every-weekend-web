@@ -1,5 +1,5 @@
 .container {
-  box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
   width: 300px;
   border-radius: 20px;
   img {
@@ -7,7 +7,44 @@
     height: 200px;
   }
 
-  .content{
-    padding: 20px;
+  .content {
+    padding: 12px 24px;
+    display: grid;
+    gap: 4px;
+    font-size: 14px;
+
+    span{
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--secondary-color);
+    }
+
+    &_name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--black);
+    }
+
+    &_price {
+      display: flex;
+      gap: 8px;
+
+      p {
+        text-decoration-line: line-through;
+      }
+    }
+
+    &_priceNow{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    &_discount{
+      padding: 8px 12px;
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+      border-radius: var(--border-radius);
+    }
   }
 }

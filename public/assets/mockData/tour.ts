@@ -12,28 +12,30 @@ const Mock_Data_Tours: ITour[] = [
       "https://firebasestorage.googleapis.com/v0/b/every-weekend-web.appspot.com/o/banner_halong.jpg?alt=media&token=ea5d21e9-cc50-4ea6-a4d7-1c0119cd3944",
       "https://firebasestorage.googleapis.com/v0/b/every-weekend-web.appspot.com/o/banner_halong.jpg?alt=media&token=ea5d21e9-cc50-4ea6-a4d7-1c0119cd3944",
       "https://firebasestorage.googleapis.com/v0/b/every-weekend-web.appspot.com/o/banner_halong.jpg?alt=media&token=ea5d21e9-cc50-4ea6-a4d7-1c0119cd3944",
-      "https://firebasestorage.googleapis.com/v0/b/every-weekend-web.appspot.com/o/banner_halong.jpg?alt=media&token=ea5d21e9-cc50-4ea6-a4d7-1c0119cd3944",
-      "https://firebasestorage.googleapis.com/v0/b/every-weekend-web.appspot.com/o/banner_halong.jpg?alt=media&token=ea5d21e9-cc50-4ea6-a4d7-1c0119cd3944",
-      "https://firebasestorage.googleapis.com/v0/b/every-weekend-web.appspot.com/o/banner_halong.jpg?alt=media&token=ea5d21e9-cc50-4ea6-a4d7-1c0119cd3944",
     ],
+    description:
+      "Vịnh Hạ Long được công nhận là 1 trong 7 kỳ quan thiên nhiên nổi tiếng của thế giới. Cảnh đẹp vịnh Hạ Long không chỉ là sự hài hòa giữa đất trời và biển cả mà còn ở những hang động chứa đựng trong lòng hàng nghìn hàng vạn các tác phẩm độc đáo bằng nhũ đá của mẹ thiên nhiên. Đến với Tour Hạ Long - Sửng Sốt - Titop 2N1Đ, Du khách không chỉ thưởng ngoạn vẻ đẹp hoang sơ, tuyệt đẹp mà còn được tận hưởng và hòa mình vào không gian bao la, hùng vỹ của biển cả...",
     quantity: 20,
     price: 2450000,
     discount: 15,
     favoriteNumber: 132,
+    rating: 9.5,
     destinationId: "1",
     departure: "Hà Nội",
     dayTime: 2,
     supplierId: "1",
     startTime: 1696950000,
     concentrationTime: 1696946400,
+    convetratePlace: "175, Tây Sơn, Đống Đa, Hà Nội",
     vehicle: "xe máy",
     sightseeing:
       "Đảo Titop, Hang Luồn, Hang Sửng Sốt, Chợ đêm Hạ Long, Bãi Cháy",
     cuisine: "mực, cá",
     hotelId: "1",
-    suitablePerson: "all",
+    suitablePerson: "Tất cả mọi người",
     highlight: "du thuyền",
-    schedule: "lịch trình",
+    schedule: [{title: "Hà Nội - Bãi Cháy - Vịnh Hạ Long", content: ""},{title: "Hạ Long - Hà Nội", content: ""}],
+
     tourGuideId: "1",
   },
   {
@@ -61,7 +63,7 @@ const Mock_Data_Tours: ITour[] = [
     hotelId: "1",
     suitablePerson: "all",
     highlight: "du thuyền",
-    schedule: "lịch trình",
+    schedule: [{title: "", content: ""}],
     tourGuideId: "1",
   },
   {
@@ -89,7 +91,7 @@ const Mock_Data_Tours: ITour[] = [
     hotelId: "1",
     suitablePerson: "all",
     highlight: "du thuyền",
-    schedule: "lịch trình",
+    schedule: [{title: "", content: ""}],
     tourGuideId: "1",
   },
   {
@@ -117,7 +119,7 @@ const Mock_Data_Tours: ITour[] = [
     hotelId: "1",
     suitablePerson: "all",
     highlight: "du thuyền",
-    schedule: "lịch trình",
+    schedule: [{title: "", content: ""}],
     tourGuideId: "1",
   },
   {
@@ -145,7 +147,7 @@ const Mock_Data_Tours: ITour[] = [
     hotelId: "1",
     suitablePerson: "all",
     highlight: "du thuyền",
-    schedule: "lịch trình",
+    schedule: [{title: "", content: ""}],
     tourGuideId: "1",
   },
   {
@@ -173,7 +175,7 @@ const Mock_Data_Tours: ITour[] = [
     hotelId: "1",
     suitablePerson: "all",
     highlight: "du thuyền",
-    schedule: "lịch trình",
+    schedule: [{title: "", content: ""}],
     tourGuideId: "1",
   },
   {
@@ -201,7 +203,7 @@ const Mock_Data_Tours: ITour[] = [
     hotelId: "1",
     suitablePerson: "all",
     highlight: "du thuyền",
-    schedule: "lịch trình",
+    schedule: [{title: "", content: ""}],
     tourGuideId: "1",
   },
   {
@@ -229,7 +231,7 @@ const Mock_Data_Tours: ITour[] = [
     hotelId: "1",
     suitablePerson: "all",
     highlight: "du thuyền",
-    schedule: "lịch trình",
+    schedule: [{title: "", content: ""}],
     tourGuideId: "1",
   },
   {
@@ -257,7 +259,7 @@ const Mock_Data_Tours: ITour[] = [
     hotelId: "1",
     suitablePerson: "all",
     highlight: "du thuyền",
-    schedule: "lịch trình",
+    schedule: [{title: "", content: ""}],
     tourGuideId: "1",
   },
   {
@@ -285,7 +287,7 @@ const Mock_Data_Tours: ITour[] = [
     hotelId: "1",
     suitablePerson: "all",
     highlight: "du thuyền",
-    schedule: "lịch trình",
+    schedule: [{title: "", content: ""}],
     tourGuideId: "1",
   },
   {
@@ -313,7 +315,7 @@ const Mock_Data_Tours: ITour[] = [
     hotelId: "1",
     suitablePerson: "all",
     highlight: "du thuyền",
-    schedule: "lịch trình",
+    schedule: [{title: "", content: ""}],
     tourGuideId: "1",
   },
   {
@@ -341,7 +343,7 @@ const Mock_Data_Tours: ITour[] = [
     hotelId: "1",
     suitablePerson: "all",
     highlight: "du thuyền",
-    schedule: "lịch trình",
+    schedule: [{title: "", content: ""}],
     tourGuideId: "1",
   },
   {
@@ -369,7 +371,7 @@ const Mock_Data_Tours: ITour[] = [
     hotelId: "1",
     suitablePerson: "all",
     highlight: "du thuyền",
-    schedule: "lịch trình",
+    schedule: [{title: "", content: ""}],
     tourGuideId: "1",
   },
   {
@@ -397,7 +399,7 @@ const Mock_Data_Tours: ITour[] = [
     hotelId: "1",
     suitablePerson: "all",
     highlight: "du thuyền",
-    schedule: "lịch trình",
+    schedule: [{title: "", content: ""}],
     tourGuideId: "1",
   },
 ];
