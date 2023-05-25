@@ -1,0 +1,90 @@
+.container {
+  width: 100%;
+  max-width: 318px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  .sort {
+    padding: 28px 24px;
+    background: var(--bg-item-color);
+    border-radius: var(--border-2x-radius);
+    display: grid;
+
+    &_title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    &_desp {
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+  }
+
+  .filter {
+    padding: 28px 24px;
+    background: var(--bg-item-color);
+    border-radius: var(--border-2x-radius);
+
+    &_title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    &_price {
+      &_display {
+        display: flex;
+        gap: 24px;
+        font-size: 14px;
+
+        &_item {
+          border: 1px solid var(--border-color);
+          border-radius: var(--border-radius);
+          padding: 8px 12px;
+          flex: 1;
+          display: grid;
+          gap: 4px;
+          background-color: var(--white);
+          height: 55px;
+
+          &_title {
+            color: var(--sources-color);
+          }
+
+          &_value {
+            font-weight: 700;
+            color: var(--black);
+          }
+        }
+      }
+    }
+
+    &_item {
+      margin-top: 16px;
+
+      &_title {
+        margin-bottom: 4px;
+        font-weight: 700;
+      }
+    }
+
+    &_box {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+
+        &_item{
+            background: var(--white);
+            border: 1px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            cursor: pointer;
+        }
+    }
+  }
+}

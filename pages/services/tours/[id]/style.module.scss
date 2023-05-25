@@ -1,4 +1,7 @@
 .container {
+  background: var(--bg-color);
+  color: var(--black);
+
   .images {
     &_grid {
       display: grid;
@@ -21,4 +24,164 @@
       }
     }
   }
+
+  .content {
+    margin: 0 15%;
+    padding: 24px;
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 24px;
+
+      .title {
+        display: grid;
+        gap: 8px;
+
+        &_ticketCode {
+          display: flex;
+          gap: 4px;
+        }
+
+        &_name {
+          font-size: 30px;
+          font-weight: 700;
+        }
+
+        &_evaluate {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          font-weight: 700;
+
+          &_rating {
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background-color: var(--primary-color);
+            color: var(--white);
+          }
+
+          &_comment {
+            color: var(--secondary-color);
+            font-size: 14px;
+          }
+
+          &_favoriteNumber {
+            display: flex;
+            padding: 4px 8px;
+            align-items: center;
+            gap: 4px;
+            border: 1px solid var(--primary-color);
+            border-radius: 4px;
+            color: var(--primary-color);
+            cursor: pointer;
+          }
+        }
+      }
+
+      .priceAndBookTour {
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+        color: var(--black);
+        gap: 4px;
+
+        .price {
+          display: flex;
+          align-items: end;
+          gap: 4px;
+
+          p {
+            font-size: 26px;
+            line-height: 26px;
+            font-weight: 700;
+            color: var(--secondary-color);
+          }
+        }
+      }
+
+      .priceAndBookTour > div:first-child {
+        text-decoration-line: line-through;
+      }
+    }
+
+    .about {
+      margin-top: 24px;
+      display: grid;
+      gap: 12px;
+
+      h2,
+      p {
+        color: var(--black);
+      }
+
+      p{
+        font-size: 14px;
+      }
+    }
+
+    .information {
+      margin-top: 24px;
+      display: flex;
+      gap: 24px;
+
+      &_card {
+        background-color: var(--white);
+        padding: 24px;
+        border-radius: var(--border-2x-radius);
+        display: grid;
+        gap: 8px;
+        font-size: 14px;
+      }
+
+      &_items {
+        display: grid;
+        gap: 12px;
+        flex: 1;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+
+        &_item {
+          font-size: 14px;
+
+          &_header {
+            display: flex;
+            align-items: center;
+            height: 50px;
+            gap: 8px;
+
+            p {
+              font-weight: 700;
+            }
+          }
+        }
+      }
+    }
+
+    .schedule {
+      display: grid;
+      gap: 12px;
+
+      h2 {
+        text-align: center;
+      }
+    }
+
+    .tourGuide{
+      margin-top: 24px;
+      background-color: var(--white);
+      padding: 24px;
+      border-radius: var(--border-2x-radius);
+    }
+
+    .informationToNote{
+      display: grid;
+      gap: 12px;
+    }
+  }
+}
+
+.bookTourCard {
+  background: red;
+  width: 400px;
 }
