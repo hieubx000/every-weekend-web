@@ -13,7 +13,7 @@ const Tours: FC<Props> = ({}) => {
   const [tours] = useState(Mock_Data_Tours);
 
   return (
-    <MainLayout>
+    <MainLayout center>
       <div className={styles.container}>
         <TourSidebar />
         <div className={styles.content}>
@@ -25,7 +25,7 @@ const Tours: FC<Props> = ({}) => {
             </div>
           </div>
 
-          <div style={{display: "block"}}>
+          <div>
             <div className={styles.grid}>
               {tours.map((item, index) => (
                 <TourCard key={index} data={item} />

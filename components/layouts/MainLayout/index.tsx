@@ -6,14 +6,15 @@ import TopBar from "@/components/common/TopBar";
 
 type Props = {
   children: React.ReactNode;
+  center?: boolean;
 };
 
-const MainLayout: FC<Props> = ({ children }) => {
+const MainLayout: FC<Props> = ({ children, center }) => {
   return (
     <div className={styles.container}>
-      <TopBar/>
+      <TopBar />
       <MainHeader />
-      {children}
+      <div className={center ? styles.center : ""}>{children}</div>
     </div>
   );
 };

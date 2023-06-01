@@ -24,7 +24,6 @@ const TourDetail: FC<Props> = ({}) => {
     }),
   );
 
-  console.log(imageUrls);
   return (
     <MainLayout>
       <div className={styles.container}>
