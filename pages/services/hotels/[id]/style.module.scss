@@ -1,0 +1,171 @@
+.container {
+  background: var(--bg-color);
+  color: var(--black);
+
+  .images {
+    &_grid {
+      display: grid;
+      padding: 0 24px;
+      gap: 8px;
+      grid-template-areas:
+        "photoOne photoTwo photoThree"
+        "photoOne photoFour photoFire";
+      grid-template-columns: 1fr 25% 25%;
+
+      &_item {
+        border-radius: var(--border-2x-radius);
+      }
+    }
+
+    &_grid > div:first-child {
+      grid-area: photoOne;
+      img {
+        height: 100%;
+      }
+    }
+  }
+
+  .content {
+    display: flex;
+    max-width: 1290px;
+    margin: 50px auto 0;
+    gap: 24px;
+    padding-inline: 24px;
+
+    &_left {
+      flex: 1;
+
+      &_rating {
+        svg {
+          width: 13px;
+          color: var(--secondary-color);
+        }
+      }
+
+      &_title {
+        font-size: 30px;
+        font-weight: 700;
+        line-height: 40px;
+        margin-bottom: 8px;
+      }
+
+      &_address {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      &_facilities {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+
+        &_item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin: 12px;
+
+          svg {
+            font-size: 24px;
+          }
+        }
+      }
+
+      &_availability {
+        .availabilities {
+          margin-top: 24px;
+          display: grid;
+          gap: 24px;
+
+          .availability {
+            height: 230px;
+            display: flex;
+
+            img {
+              height: 230px;
+              border-radius: var(--border-2x-radius) 0 0 var(--border-2x-radius);
+            }
+
+            &_content {
+              display: flex;
+              padding: 24px 0;
+              border: 1px solid var(--border-color);
+              border-radius: 0 var(--border-2x-radius) var(--border-2x-radius) 0;
+
+              &_info {
+                display: flex;
+                gap: 50px;
+                flex-direction: column;
+                justify-content: space-evenly;
+                padding: 0 24px;
+
+                &_title {
+                  font-size: 18px;
+                  line-height: 24px;
+                  font-weight: 700;
+                }
+
+                &_items {
+                  display: flex;
+                  justify-content: space-between;
+
+                  &_item {
+                    width: fit-content;
+
+                    &_icon {
+                      border: 1px solid var(--border-color);
+                      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08),
+                        0 4px 12px rgba(0, 0, 0, 0.05);
+                      padding: 16px;
+                      border-radius: var(--border-2x-radius);
+                      margin-bottom: 4px;
+                    }
+
+                    &_title {
+                      display: flex;
+                      justify-content: center;
+                      font-size: 14px;
+                      color: var(--sources-color);
+                    }
+                  }
+                }
+              }
+
+              &_price {
+                border-left: 1px solid var(--border-color);
+                padding: 0 24px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+
+                p {
+                  font-size: 14px;
+                  margin-bottom: 2px;
+                  width: fit-content;
+                }
+
+                span {
+                  font-size: 22px;
+                  font-weight: 700;
+                  color: var(--secondary-color);
+                  display: flex;
+                  align-items: flex-end;
+                  gap: 4px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &_right {
+      width: 300px;
+      height: fit-content;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
+      border-radius: var(--border-2x-radius);
+      padding: 24px;
+      border: 1px solid var(--border-color);
+    }
+  }
+}
