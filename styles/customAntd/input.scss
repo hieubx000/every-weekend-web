@@ -1,32 +1,39 @@
 .ant-picker {
   width: 100%;
-  padding-block: 0;
+  // padding-block: 0;
 }
 
-.ant-picker-input {
-  height: 55px;
+.ant-input-number-group-wrapper {
+  width: 100%;
 }
 
-.ant-select-selection-search-input {
-  height: 55px !important;
-}
+// .ant-picker-input {
+//   height: 55px;
+// }
 
-.ant-select-selector {
-  height: 55px !important;
-  display: flex;
-  align-items: center;
-}
+// .ant-select-selection-search-input {
+//   height: 55px !important;
+// }
 
+// .ant-select-selector {
+//   height: 55px !important;
+//   display: flex;
+//   align-items: center;
+// }
 
-.ant-input-number{
+.ant-input-number {
   width: 100% !important;
 }
 
- .ant-input-number-input-wrap {
-  height: 55px !important;
-  input {
-    height: 100% !important;
-    font-size: 24px !important;
-    font-weight: 700;
-  }
+// .ant-input-number-input-wrap {
+//   height: 55px !important;
+//   input {
+//     height: 100% !important;
+//     font-size: 24px !important;
+//     font-weight: 700;
+//   }
+// }
+
+.ant-form-item-label {
+  font-weight: 600;
 }

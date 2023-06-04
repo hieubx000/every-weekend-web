@@ -1,0 +1,95 @@
+.container {
+  padding: 24px;
+  margin: 0;
+  background: var(--white-color);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  .sightseeing {
+    &_tagInput {
+      min-width: 150px;
+      height: 30px;
+      vertical-align: top;
+    }
+
+    &_tag {
+      user-select: none;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+
+      span:first-child {
+        margin-bottom: 4px;
+      }
+    }
+
+    &_btnAdd {
+      border-style: dashed;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+  }
+
+  .address_btn {
+    width: 100%;
+    background-color: var(--white-color);
+    color: var(--primary-color);
+    font-weight: 500;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid var(--primary-color);
+    border-radius: var(--border-radius);
+    margin: 0 0 1rem;
+    cursor: pointer;
+  }
+
+  .picture {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0 1.5rem;
+    .pic {
+      position: relative;
+
+      img {
+        width: 10rem;
+      }
+      .cancel {
+        position: absolute;
+        right: -0.5rem;
+        top: -0.5rem;
+        cursor: pointer;
+
+        .icon{
+          font-size: 20px;
+          color: var(--gray-color);
+        }
+      }
+    }
+  }
+
+  .title {
+    font-weight: 500;
+    margin: 12px 0;
+  }
+
+  .schedule {
+    border: 1px solid var(--border-color);
+    padding: 24px;
+    margin: 16px 0;
+    border-radius: var(--border-radius);
+
+    &_iconDelete {
+      text-align: end;
+    }
+  }
+
+  .btnSubmit {
+    display: flex;
+    justify-content: end;
+    gap: 16px;
+  }
+}

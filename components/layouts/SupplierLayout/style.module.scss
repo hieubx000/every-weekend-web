@@ -1,0 +1,19 @@
+.container {
+  .content {
+    display: flex;
+
+    &_children {
+      flex: 1;
+      
+      .layout {
+        height: 100%;
+        padding: 0 24px 24px;
+
+        &_content{
+          background-color: var(--white-color);
+          padding: 24px;
+        }
+      }
+    }
+  }
+}

@@ -19,11 +19,11 @@ const useHeader = () => {
   const headerMenu = useMemo(() => {
     return role === Role.customer
       ? [
-        {
-          text: "Điểm đến",
-          href: routerPathConstant.homepage,
-          active: router.pathname.includes(routerPathConstant.homepage),
-        },
+          {
+            text: "Điểm đến",
+            href: routerPathConstant.homepage,
+            active: router.pathname.includes(routerPathConstant.homepage),
+          },
           {
             text: "Dịch vụ",
             href: "",

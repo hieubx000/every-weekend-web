@@ -1,0 +1,23 @@
+.container {
+    padding: 0 24px 24px;
+    height: 100%;
+  
+    .breadcrumb {
+      margin: 16px 0;
+    }
+  
+    .content {
+      padding: 24px;
+      margin: 0;
+      background: var(--white-color);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+  
+      &_top{
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
+  
