@@ -1,0 +1,12 @@
+.container {
+  margin: 16px 0;
+
+  a {
+    color: unset;
+  }
+
+  a:hover {
+    background: unset;
+    color: var(--primary-color);
+  }
+}
