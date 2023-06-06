@@ -31,6 +31,7 @@ const Login: FC<Props> = ({}) => {
               <Form.Item label="Vai trò của bạn" name="role">
                 <Select
                   defaultValue="customer"
+                  size="large"
                   options={[
                     { value: "customer", label: "Khách hàng" },
                     { value: "supplier", label: "Nhà cung cấp" },
@@ -40,7 +41,7 @@ const Login: FC<Props> = ({}) => {
               </Form.Item>
 
               <Form.Item>
-                <Button type="primary" htmlType="submit" block>
+                <Button size="large" type="primary" htmlType="submit" block>
                   Tiếp tục
                 </Button>
               </Form.Item>
