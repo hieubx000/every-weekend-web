@@ -1,8 +1,8 @@
-import { FC, memo, useMemo, useState } from "react";
+import { FC, memo, useCallback, useState } from "react";
 
 import styles from "./style.module.scss";
 import MainLayout from "@/components/layouts/MainLayout";
-import { Collapse, Descriptions, Divider, Image, List } from "antd";
+import { Collapse, Descriptions, Divider, Image, List, Button } from "antd";
 import { Mock_Data_Tours } from "@/public/assets/mockData/tour";
 import { HiOutlineTicket } from "react-icons/hi";
 import { MdOutlineFavoriteBorder, MdOutlineFavorite } from "react-icons/md";
@@ -11,18 +11,24 @@ import {
   convertTimestampToDateTime,
   numberFormatter,
 } from "@/utils/converts";
-import Button from "@/components/common/Button";
+import { useRouter } from "next/router";
+
 const { Panel } = Collapse;
 
 type Props = {};
 
 const TourDetail: FC<Props> = ({}) => {
+  const router = useRouter();
   const data = Mock_Data_Tours[0];
   const [imageUrls, setImageUrls] = useState(
     data.imageUrls.map((item, index) => {
       if (index < 5) return item;
     }),
   );
+
+  const pushToBookingTour = useCallback(() => {
+    router.push(`/services/tours/booking?tourId=${router.query.id}`);
+  }, [router]);
 
   return (
     <MainLayout>
@@ -75,7 +81,14 @@ const TourDetail: FC<Props> = ({}) => {
                   {numberFormatter((data.price / 100) * (100 - data.discount))}đ
                 </p>
               </div>
-              <Button style={{ marginTop: "12px" }}>Đặt ngay</Button>
+              <Button
+                className="bold"
+                type="primary"
+                size="large"
+                style={{ marginTop: "12px" }}
+                onClick={pushToBookingTour}>
+                Đặt ngay
+              </Button>
             </div>
           </div>
 

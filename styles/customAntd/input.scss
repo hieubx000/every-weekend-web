@@ -36,4 +36,8 @@
 
 .ant-form-item-label {
   font-weight: 600;
+
+  label::after{
+    display: none;
+  }
 }

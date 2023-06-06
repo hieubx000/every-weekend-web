@@ -26,6 +26,18 @@ export const convertTimestampToDateTime = (timestamp: number) => {
   return date;
 };
 
+export const convertTimestampToDateTimeAdded = (
+  timestamp: number,
+  days: number,
+) => {
+  const date = moment
+    .unix(timestamp)
+    .add(days, "days")
+    .format("hh:mm - DD/MM/YYYY");
+
+  return date;
+};
+
 export const numberFormatter = (value: number) => {
   const numberFormatter = Intl.NumberFormat("en-US");
   const formatted = numberFormatter.format(value);
