@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  
+  .welcome {
+    &_title {
+      font-size: 32px;
+      font-weight: 700;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+.container {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-2x-radius);
+  padding: 24px 48px;
+
+  &_item {
+    width: 300px;
+  }
+}

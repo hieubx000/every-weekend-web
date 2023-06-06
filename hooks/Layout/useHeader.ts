@@ -68,7 +68,7 @@ const useHeader = () => {
               id: routerPathConstant.homepage,
               src: "/assets/icons/header/user.svg",
               title: "Thông tin tài khoản",
-              link: routerPathConstant.homepage,
+              link: routerPathConstant.account,
             },
             {
               id: routerPathConstant.homepage,
@@ -128,6 +128,11 @@ const useHeader = () => {
       : [];
   }, [routerPathConstant]);
 
+  const onClickItemDrawer = useCallback((url: string) => {
+    setDropdown(false);
+    router.push(url);
+  }, []);
+
   return {
     role,
     accountDropdownRef,
@@ -139,6 +144,7 @@ const useHeader = () => {
     setLeftDrawer,
     setRightAuthDrawer,
     setDropdown,
+    onClickItemDrawer,
   };
 };
 

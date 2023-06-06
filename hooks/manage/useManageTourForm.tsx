@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
 import { Form, InputRef, SelectProps, theme } from "antd";
-import { IBreadcrumb } from "@/components/common/CustomBreadcrumb";
 import { DeleteTwoTone } from "@ant-design/icons";
 
 const useManageTourForm = () => {
@@ -16,24 +15,6 @@ const useManageTourForm = () => {
   const inputRef = useRef<InputRef>(null);
   const editInputTagRef = useRef<InputRef>(null);
   const [form] = Form.useForm();
-
-  const breadcrumbItems: IBreadcrumb[] = [
-    {
-      id: "1",
-      name: "Manage",
-      url: "/manage/tours",
-    },
-    {
-      id: "2",
-      name: "Tour",
-      url: "/manage/tours",
-    },
-    {
-      id: "3",
-      name: "New",
-      url: "/manage/tours/new",
-    },
-  ];
 
   const options: SelectProps["options"] = [
     { label: "Máy bay", value: "may_bay" },
@@ -129,7 +110,6 @@ const useManageTourForm = () => {
     handlePostAddress,
     form,
     options,
-    breadcrumbItems,
     tags,
     editInputTagIndex,
     setEditInputTagIndex,

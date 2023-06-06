@@ -1,6 +1,10 @@
 .container {
-}
-.center{
+  .center {
     display: flex;
     justify-content: center;
+  }
+
+  .loading {
+    height: calc(100vh - 200px);
+  }
 }
