@@ -1,7 +1,6 @@
-import { FC, memo, useState } from "react";
+import { FC, memo, useState, useCallback } from "react";
+import { useRouter } from "next/router";
 
-import styles from "./style.module.scss";
-import MainLayout from "@/components/layouts/MainLayout";
 import { Mock_Data_Hotels } from "@/public/assets/mockData/hotels";
 import {
   Affix,
@@ -11,25 +10,48 @@ import {
   Image,
   InputNumber,
   Rate,
+  Button,
+  Tooltip,
+  Result,
 } from "antd";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { TbArrowAutofitHeight } from "react-icons/tb";
 import { BiBed, BiWifi2 } from "react-icons/bi";
 import { GrUser } from "react-icons/gr";
+import ModalPopup from "@/components/common/ModalPopup/ModalPopup";
+import MainLayout from "@/components/layouts/MainLayout";
 import { convertFacilitiesFromEnum } from "@/utils/facilities";
 import { numberFormatter } from "@/utils/converts";
-import Button from "@/components/common/Button";
+import { Room } from "@/types/services/hotels";
+
+import styles from "./style.module.scss";
+
 const { RangePicker } = DatePicker;
 
 type Props = {};
 
 const HotelDetail: FC<Props> = ({}) => {
+  const router = useRouter();
+  const [visible, setVisible] = useState(false);
   const data = Mock_Data_Hotels[0];
+  const [order, setOrder] = useState<Room>();
   const [imageUrls, setImageUrls] = useState(
     data.imageUrls.map((item, index) => {
       if (index < 5) return item;
     }),
   );
+
+  const onFinish = useCallback(
+    (e: any) => {
+      setVisible(true);
+    },
+    [order],
+  );
+
+  const postToHomePage = useCallback(() => {
+    router.push("/");
+  }, []);
+
   return (
     <MainLayout>
       <div className={styles.container}>
@@ -180,12 +202,19 @@ const HotelDetail: FC<Props> = ({}) => {
                       <div className={styles.availability_content_price}>
                         <div>
                           <p>Giá phòng/đêm</p>
-                          <span>
+                          <div
+                            className={styles.availability_content_price_value}>
                             {numberFormatter(item.price)}
                             <p>đ</p>
-                          </span>
+                          </div>
                         </div>
-                        <Button>Đặt phòng</Button>
+                        <Button
+                          type="primary"
+                          onClick={() => {
+                            setOrder(item);
+                          }}>
+                          Chọn ngay
+                        </Button>
                       </div>
                     </div>
                   </div>
@@ -193,38 +222,107 @@ const HotelDetail: FC<Props> = ({}) => {
               </div>
             </div>
           </div>
-          <div className={styles.content_right}>
-            <Form>
-              <Form.Item
-                label="Thời gian đặt phòng"
-                name="time"
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập thời gian đặt phòng",
-                  },
-                ]}>
-                <RangePicker />
-              </Form.Item>
+          <Affix offsetTop={80}>
+            <div className={styles.content_right}>
+              <Form
+                onFinish={onFinish}
+                initialValues={{
+                  ["quantity"]: 1,
+                  ["person"]: 2,
+                }}>
+                <Form.Item
+                  label="Thời gian đặt phòng"
+                  name="time"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng nhập thời gian đặt phòng",
+                    },
+                  ]}>
+                  <RangePicker
+                    size="large"
+                    format="DD-MM-YYYY"
+                    placeholder={["Check In", "Check Out"]}
+                  />
+                </Form.Item>
 
-              <Form.Item
-                label="Số phòng"
-                name="quantity"
-                rules={[{ required: true, message: "Vui lòng nhập số phòng" }]}>
-                <InputNumber min={0} max={20} defaultValue={1} />
-              </Form.Item>
+                <Form.Item
+                  label="Số phòng"
+                  name="quantity"
+                  rules={[
+                    { required: true, message: "Vui lòng nhập số phòng" },
+                  ]}>
+                  <InputNumber
+                    size="large"
+                    min={0}
+                    max={20}
+                    placeholder="Số phòng"
+                  />
+                </Form.Item>
 
-              <Form.Item
-                label="Số Người"
-                name="person"
-                rules={[{ required: true, message: "Vui lòng nhập số người" }]}>
-                <InputNumber min={0} max={40} defaultValue={2} />
-              </Form.Item>
-            </Form>
-            <Button>Đặt phòng</Button>
-          </div>
+                <Form.Item
+                  label="Số Người"
+                  name="person"
+                  rules={[
+                    { required: true, message: "Vui lòng nhập số người" },
+                  ]}>
+                  <InputNumber
+                    size="large"
+                    min={0}
+                    max={40}
+                    placeholder="Số người"
+                  />
+                </Form.Item>
+
+                {order && (
+                  <div className={styles.content_right_info}>
+                    <div>
+                      Loại phòng: <b>{order?.name}</b>
+                    </div>
+                    <div>
+                      Đơn giá:{" "}
+                      <b>{order?.price ? numberFormatter(order?.price) : 0}đ</b>
+                    </div>
+                    <div>
+                      Diện tích: <b>{order?.acreage} m2</b>
+                    </div>
+                  </div>
+                )}
+
+                <Divider />
+                <Tooltip title={order ? "" : "Vui lòng chọn phòng"}>
+                  <Button
+                    disabled={order ? false : true}
+                    type="primary"
+                    htmlType="submit"
+                    size="large"
+                    block>
+                    Đặt phòng
+                  </Button>
+                </Tooltip>
+              </Form>
+            </div>
+          </Affix>
         </div>
       </div>
+      <ModalPopup
+        width={700}
+        visible={visible}
+        isConfirmBtn={false}
+        isCancelBtn={false}>
+        <Result
+          icon={<img width={200} src="/assets/icons/success.svg" alt="" />}
+          status="success"
+          title="Đặt phòng thành công"
+          subTitle="Mã đặt phòng của bạn là: 123456789"
+          extra={[
+            <Button type="primary" key="console">
+              Đi tới chi tiết
+            </Button>,
+            <Button onClick={postToHomePage}>Trở về trang chủ</Button>,
+          ]}
+        />
+      </ModalPopup>
     </MainLayout>
   );
 };

@@ -22,7 +22,8 @@ const Mock_Data_Hotels: IHotel[] = [
     availability: [
       {
         id: "av1",
-        imageUrl: "https://modtel.travelerwp.com/wp-content/uploads/2022/04/Jumeirah-Emirates-Towers-800x600.png",
+        imageUrl:
+          "https://modtel.travelerwp.com/wp-content/uploads/2022/04/Jumeirah-Emirates-Towers-800x600.png",
         name: "Phòng Tiêu Chuẩn Giường Đôi",
         acreage: 170,
         amount: 2,
@@ -32,14 +33,15 @@ const Mock_Data_Hotels: IHotel[] = [
         quantity: 2,
       },
       {
-        id: "av1",
-        imageUrl: "https://modtel.travelerwp.com/wp-content/uploads/2022/04/Jumeirah-Emirates-Towers-800x600.png",
-        name: "Phòng Tiêu Chuẩn Giường Đôi",
-        acreage: 170,
+        id: "av2",
+        imageUrl:
+          "https://modtel.travelerwp.com/wp-content/uploads/2022/04/Jumeirah-Emirates-Towers-800x600.png",
+        name: "Phòng Cao cấp Giường Đôi",
+        acreage: 240,
         amount: 2,
         noOfBeds: 1,
         wifi: true,
-        price: 12000000,
+        price: 24000000,
         quantity: 2,
       },
     ],
@@ -67,7 +69,8 @@ const Mock_Data_Hotels: IHotel[] = [
     availability: [
       {
         id: "av1",
-        imageUrl: "https://modtel.travelerwp.com/wp-content/uploads/2022/04/Jumeirah-Emirates-Towers-800x600.png",
+        imageUrl:
+          "https://modtel.travelerwp.com/wp-content/uploads/2022/04/Jumeirah-Emirates-Towers-800x600.png",
         name: "Phòng Tiêu Chuẩn Giường Đôi",
         acreage: 170,
         amount: 2,
