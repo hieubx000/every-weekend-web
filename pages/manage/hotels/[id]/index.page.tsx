@@ -2,7 +2,7 @@ import { FC, memo } from "react";
 
 import SupplierLayout from "@/components/layouts/SupplierLayout";
 import { IBreadcrumb } from "@/components/common/CustomBreadcrumb";
-import TourForm from "@/modules/Manage/TourForm";
+import HotelForm from "@/modules/Manage/HotelForm";
 
 type Props = {};
 
@@ -24,12 +24,12 @@ const breadcrumbItems: IBreadcrumb[] = [
   },
 ];
 
-const EditTour: FC<Props> = ({}) => {
+const EditHotel: FC<Props> = ({}) => {
   return (
     <SupplierLayout breadcrumbItems={breadcrumbItems}>
-      <TourForm />
+      <HotelForm />
     </SupplierLayout>
   );
 };
 
-export default memo(EditTour);
+export default memo(EditHotel);

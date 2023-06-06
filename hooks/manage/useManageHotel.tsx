@@ -14,7 +14,7 @@ interface DataType {
   tags: string[];
 }
 
-const useManageTour = () => {
+const useManageHotel = () => {
   const router = useRouter();
 
   const tableColumns: ColumnsType<DataType> = [
@@ -100,8 +100,8 @@ const useManageTour = () => {
     },
   ];
 
-  const pushToCreateTour = useCallback(() => {
-    router.push("/manage/tours/new");
+  const pushToCreateHotel = useCallback(() => {
+    router.push("/manage/hotels/new");
   }, []);
 
   const breadcrumbItems: IBreadcrumb[] = [
@@ -112,12 +112,12 @@ const useManageTour = () => {
     },
     {
       id: "2",
-      name: "Tour",
-      url: "/manage/tours",
+      name: "Hotels",
+      url: "/manage/hotels",
     },
   ];
 
-  return { breadcrumbItems, tableColumns, tableData, pushToCreateTour };
+  return { breadcrumbItems, tableColumns, tableData, pushToCreateHotel };
 };
 
-export { useManageTour };
+export { useManageHotel };

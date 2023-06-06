@@ -1,0 +1,22 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 80px);
+
+  .form{
+    width: 500px;
+    padding: 24px 48px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-2x-radius);
+
+    &_logo{
+      height: 100px;
+      text-align: center;
+
+      img{
+        height: 100%;
+      }
+    }
+  }
+}

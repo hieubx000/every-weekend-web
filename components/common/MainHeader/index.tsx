@@ -29,6 +29,7 @@ const MainHeader: FC<Props> = () => {
     setLeftDrawer,
     setRightAuthDrawer,
     setDropdown,
+    onClickItemDrawer,
   } = useHeader();
 
   const renderAuthorization = () =>
@@ -169,8 +170,7 @@ const MainHeader: FC<Props> = () => {
                     <div
                       key={item.id}
                       className={styles.item}
-                      // onClick={() => setDropdown(false)}
-                    >
+                      onClick={onClickItemDrawer.bind(this, item.link)}>
                       <div className={styles.popup}>
                         <div className={styles.text}>
                           <img alt="" src={item.src} />
@@ -223,11 +223,7 @@ const MainHeader: FC<Props> = () => {
 
           <div className={styles.header_logo}>
             <LinkTo href="/">
-              <img
-                src="/assets/images/logo.png"
-                alt="Việc làm Fjob"
-                title="Việc làm Fjob"
-              />
+              <img src="/assets/images/logo.png" alt="" title="" />
             </LinkTo>
           </div>
 
@@ -245,9 +241,7 @@ const MainHeader: FC<Props> = () => {
                       <div>
                         {item.children.map((it, index) => (
                           <div key={index} className={styles.link_popover}>
-                            <a href={it.href}>
-                              {it.text}
-                            </a>
+                            <a href={it.href}>{it.text}</a>
                           </div>
                         ))}
                       </div>

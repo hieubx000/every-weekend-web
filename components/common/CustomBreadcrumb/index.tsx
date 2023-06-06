@@ -8,7 +8,7 @@ import styles from "./style.module.scss";
 export type IBreadcrumb = {
   id: string;
   name: string;
-  url: string;
+  url?: string;
 };
 
 type Props = {
@@ -23,7 +23,7 @@ const CustomBreadcrumb: FC<Props> = ({ items }) => {
           {index === items.length - 1 ? (
             item.name
           ) : (
-            <Link href={item.url}>{item.name}</Link>
+            <Link href={item.url || ""}>{item.name}</Link>
           )}
         </Breadcrumb.Item>
       ))}
