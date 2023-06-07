@@ -1,24 +1,21 @@
-import React, { FC, memo, useRef, useState } from "react";
+import React, { FC, memo, useState, useEffect } from "react";
 
 import styles from "./style.module.scss";
 import { BsChevronRight, BsChevronDown } from "react-icons/bs";
-import { routerPathConstant } from "@/constants/routerConstant";
-import { useRouter } from "next/router";
 import { Drawer, Popover } from "antd";
 import LinkTo from "../LinkTo";
 import defaultConstant from "@/constants/defaultConstant";
 
-import { useDispatch, useSelector } from "react-redux";
-import { selectAuthState } from "@/redux/slice/authSlice";
 import useHeader from "@/hooks/Layout/useHeader";
-import useOnClickOutside from "@/hooks/useClickOutside";
 import { Role } from "@/types/common";
 import { convertRoleEnumToName } from "@/utils/converts";
+import { authStorage } from "@/storage/authStorage";
 
 type Props = {};
 
 const MainHeader: FC<Props> = () => {
   const {
+    profile,
     role,
     accountDropdownRef,
     headerMenu,
@@ -41,7 +38,7 @@ const MainHeader: FC<Props> = () => {
             onClick={() => setDropdown(!dropdown)}>
             <div className={styles.avatar}>
               <img
-                src={defaultConstant.defaultAvatarUser}
+                src={profile?.avatar || defaultConstant.defaultAvatarUser}
                 className="object-fit-cover"
                 alt=""
                 width="40"
@@ -49,7 +46,7 @@ const MainHeader: FC<Props> = () => {
               />
             </div>
             <div className={styles.info}>
-              <div className={styles.name}>profile name</div>
+              <div className={styles.name}>{profile?.name}</div>
               <div className={styles.role}>{convertRoleEnumToName(role)}</div>
             </div>
             <div style={{ color: "var(--white-color)", paddingRight: ".5rem" }}>
@@ -70,7 +67,7 @@ const MainHeader: FC<Props> = () => {
 
             <Drawer
               className={styles.draw_auth_right}
-              visible={rightAuthDrawer}
+              open={rightAuthDrawer}
               width="75%"
               placement="right"
               key="right"
@@ -79,10 +76,13 @@ const MainHeader: FC<Props> = () => {
               <div className={styles.information_dropdown}>
                 <div className={styles.information}>
                   <div className={styles.img}>
-                    <img alt="" src={defaultConstant.defaultAvatarUser} />
+                    <img
+                      alt=""
+                      src={profile?.avatar || defaultConstant.defaultAvatarUser}
+                    />
                   </div>
                   <div className={styles.info}>
-                    <div className={styles.name}>profile name</div>
+                    <div className={styles.name}>{profile?.name}</div>
                     {/* {profile.verifyKyc ? ( */}
                     {true ? (
                       <div className={styles.verify}>
@@ -107,12 +107,14 @@ const MainHeader: FC<Props> = () => {
 
                 {accountMenu.map((arr, idx) => (
                   <div key={idx} className={styles.list}>
-                    {arr.map((item) => (
+                    {arr.map((item, index) => (
                       <div
-                        key={item.id}
+                        key={index}
                         className={styles.item}
-                        // onClick={() => setDropdown(false)}
-                      >
+                        onClick={() => {
+                          setDropdown(false);
+                          item.onClickItem && item.onClickItem();
+                        }}>
                         <div className={styles.popup}>
                           <div className={styles.text}>
                             <img alt="" src={item.src} />
@@ -137,40 +139,25 @@ const MainHeader: FC<Props> = () => {
                     height="50"
                     className="object-fit-cover"
                     alt=""
-                    src={defaultConstant.defaultAvatarUser}
+                    src={profile?.avatar || defaultConstant.defaultAvatarUser}
                   />
                 </div>
                 <div className={styles.info}>
-                  <div className={styles.name}>profile name</div>
-                  {/* {profile.verifyKyc ? ( */}
-                  {true ? (
-                    <div className={styles.verify}>
-                      <img alt="" src="/assets/icons/color/isVerified.svg" />
-                      &nbsp;
-                      <span>Tài khoản đã được xác thực</span>
-                    </div>
-                  ) : (
-                    <div className={styles.verify}>
-                      <img alt="" src="/assets/icons/color/unVerified.svg" />
-                      &nbsp;
-                      <span>Tài khoản chưa được xác thực</span>
-                    </div>
-                  )}
-                  <div className={styles.diamond}>
-                    {/* <span>{formatDiamond(profile.walletValue)}</span> */}
-                    &nbsp;
-                    <img src="/assets/icons/color/diamond.svg" alt="" />
-                  </div>
+                  <div className={styles.name}>{profile?.name}</div>
+                  <div>{profile?.userName}</div>
                 </div>
               </div>
 
               {accountMenu.map((arr, idx) => (
                 <div key={idx} className={styles.list}>
-                  {arr.map((item) => (
+                  {arr.map((item, index) => (
                     <div
-                      key={item.id}
+                      key={index}
                       className={styles.item}
-                      onClick={onClickItemDrawer.bind(this, item.link)}>
+                      onClick={() => {
+                        onClickItemDrawer(item.link);
+                        item.onClickItem && item.onClickItem();
+                      }}>
                       <div className={styles.popup}>
                         <div className={styles.text}>
                           <img alt="" src={item.src} />
@@ -200,7 +187,7 @@ const MainHeader: FC<Props> = () => {
             </div>
             <Drawer
               className={styles.draw_left}
-              visible={leftDrawer}
+              open={leftDrawer}
               width="75%"
               placement="left"
               key="left"

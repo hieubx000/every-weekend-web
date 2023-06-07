@@ -1,4 +1,4 @@
-import { FC, memo } from "react";
+import { FC, memo, useEffect, useCallback } from "react";
 
 import styles from "./style.module.scss";
 import AuthLayout from "@/components/layouts/AuthLayout";
@@ -13,20 +13,47 @@ import {
   InputNumber,
 } from "antd";
 import { provinceList } from "@/public/assets/data/intData";
+import { getListAccountApi, postRegister } from "@/api/services/auth";
+import { handleError } from "@/utils/helper";
+import { useDispatch, useSelector } from "react-redux";
+import { setToken } from "@/redux/actions/Token";
+import authSlice, { setTokenUser } from "@/redux/slice/authSlice";
 
 type Props = {};
 
 const SignUp: FC<Props> = ({}) => {
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
-  };
+  const onFinish = useCallback(async (values: any) => {
+    try {
+      const res = await postRegister({
+        userName: values.userName,
+        password: values.password,
+        name: values.name,
+        address: values.address,
+        phoneNumber: values.phoneNumber,
+      });
+      console.log("MTS2023", res);
+    } catch (error) {
+      handleError(error);
+    }
+  }, []);
 
+  // dispatch(setToken(JSON.stringify(token)));
+  const dispatch = useDispatch();
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
+  };
+  const res = useSelector((state: any) => state.auth.token);
+  const onClick = () => {
+    dispatch(setTokenUser("abc"));
+  };
+  const onClick1 = () => {
+    console.log("ahihi", res);
   };
 
   return (
     <AuthLayout>
+      <Button onClick={onClick}>Click</Button>
+      <Button onClick={onClick1}>Click1</Button>
       <div className={styles.container}>
         <Form
           name="basic"
@@ -89,7 +116,7 @@ const SignUp: FC<Props> = ({}) => {
           <h3>Thông tin tài khoản</h3>
           <Form.Item
             label="Tên đăng nhập"
-            name="username"
+            name="userName"
             rules={[
               { required: true, message: "Vui lòng nhập tên đăng nhập!" },
             ]}>

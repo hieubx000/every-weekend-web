@@ -1,3 +1,4 @@
+import { provinceList } from "@/public/assets/data/intData";
 import { Role } from "@/types/common";
 import moment from "moment";
 
@@ -38,9 +39,20 @@ export const convertTimestampToDateTimeAdded = (
   return date;
 };
 
+export const convertDatePickerToTimestamp = (date: any) => {
+  return parseInt(moment(date.$d).format("X"));
+};
+
 export const numberFormatter = (value: number) => {
   const numberFormatter = Intl.NumberFormat("en-US");
   const formatted = numberFormatter.format(value);
 
   return formatted;
+};
+
+export const convertEnumToProvince = (number: number) => {
+  const res = provinceList.find((item) => {
+    return item.id === number;
+  });
+  return res?.name;
 };

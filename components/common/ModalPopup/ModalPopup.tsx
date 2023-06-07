@@ -62,7 +62,7 @@ const ModalPopup: FC<IProps> = ({
     closable={closeBtn}
     width={width}
     footer={null}
-    visible={visible}
+    open={visible}
     maskClosable={maskClosable}
     onCancel={(e) => {
       e.stopPropagation();

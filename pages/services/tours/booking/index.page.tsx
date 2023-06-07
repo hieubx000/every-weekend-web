@@ -32,6 +32,7 @@ import moment from "moment";
 import { FiUsers } from "react-icons/fi";
 import ModalPopup from "@/components/common/ModalPopup/ModalPopup";
 import { useRouter } from "next/router";
+import SuccessModal from "@/components/common/Modal/SuccessModal";
 
 type Props = {};
 
@@ -331,24 +332,13 @@ const TourBooking: FC<Props> = ({}) => {
               </div>
             </Affix>
           </Form>
-          <ModalPopup
-            width={700}
+          <SuccessModal
+            onCancel={() => setVisible(false)}
             visible={visible}
-            isConfirmBtn={false}
-            isCancelBtn={false}>
-            <Result
-              icon={<img width={200} src="/assets/icons/success.svg" alt="" />}
-              status="success"
-              title="Đặt tour thành công"
-              subTitle="Mã đặt tour của bạn là: 123456789"
-              extra={[
-                <Button type="primary" key="console">
-                  Đi tới chi tiết
-                </Button>,
-                <Button onClick={postToHomePage}>Trở về trang chủ</Button>,
-              ]}
-            />
-          </ModalPopup>
+            title="Đặt tour thành công"
+            subTitle="Mã đặt tour của bạn là: 123456789"
+            goToDetailUrl="/"
+          />
         </div>
       </div>
     </MainLayout>

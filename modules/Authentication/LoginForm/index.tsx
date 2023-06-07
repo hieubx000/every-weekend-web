@@ -1,25 +1,35 @@
-import { FC, memo } from "react";
+import { FC, memo, useCallback } from "react";
 
 import { Button, Form, Input } from "antd";
 
 import styles from "./style.module.scss";
+import { postLogInApi } from "@/api/services/auth";
+import { handleError } from "@/utils/helper";
+import { useRouter } from "next/router";
+import { authStorage } from "@/storage/authStorage";
 
 type Props = {};
 
-const TopBar: FC<Props> = ({}) => {
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
-  };
+const LoginForm: FC<Props> = ({}) => {
+  const router = useRouter();
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
-  };
+  const onFinish = useCallback(async (values: any) => {
+    try {
+      const response = await postLogInApi(values);
+      // dispatch(setProfile(response.data.data.data));
+      // dispatch(setTokenUser(response.data.data.token));
+      authStorage.setUserToken(response.data.data.token);
+      authStorage.setUserProfile(response.data.data.data);
+      router.push("/");
+    } catch (error) {
+      handleError(error);
+    }
+  }, []);
 
   return (
     <Form
       name="basic"
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
       autoComplete="off"
       className={styles.container}>
       <img src="/assets/images/logo.png" alt="" title="" />
@@ -46,4 +56,4 @@ const TopBar: FC<Props> = ({}) => {
   );
 };
 
-export default memo(TopBar);
+export default memo(LoginForm);
