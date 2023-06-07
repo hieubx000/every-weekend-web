@@ -25,6 +25,7 @@ import { numberFormatter } from "@/utils/converts";
 import { Room } from "@/types/services/hotels";
 
 import styles from "./style.module.scss";
+import SuccessModal from "@/components/common/Modal/SuccessModal";
 
 const { RangePicker } = DatePicker;
 
@@ -305,24 +306,13 @@ const HotelDetail: FC<Props> = ({}) => {
           </Affix>
         </div>
       </div>
-      <ModalPopup
-        width={700}
+      <SuccessModal
+        onCancel={() => setVisible(false)}
         visible={visible}
-        isConfirmBtn={false}
-        isCancelBtn={false}>
-        <Result
-          icon={<img width={200} src="/assets/icons/success.svg" alt="" />}
-          status="success"
-          title="Đặt phòng thành công"
-          subTitle="Mã đặt phòng của bạn là: 123456789"
-          extra={[
-            <Button type="primary" key="console">
-              Đi tới chi tiết
-            </Button>,
-            <Button onClick={postToHomePage}>Trở về trang chủ</Button>,
-          ]}
-        />
-      </ModalPopup>
+        title="Đặt phòng thành công"
+        subTitle="Mã phòng tour của bạn là: 123456789"
+        goToDetailUrl="/"
+      />
     </MainLayout>
   );
 };

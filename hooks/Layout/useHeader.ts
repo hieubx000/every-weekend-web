@@ -1,16 +1,25 @@
 import { routerPathConstant } from "@/constants/routerConstant";
 import { useRouter } from "next/router";
-import { useMemo, useCallback, useState, useRef } from "react";
+import { useMemo, useCallback, useState, useRef, useEffect } from "react";
 import useOnClickOutside from "../useClickOutside";
-import { Role } from "@/types/common";
+import { Role, User } from "@/types/common";
+import { authStorage } from "@/storage/authStorage";
 
 const useHeader = () => {
   const [leftDrawer, setLeftDrawer] = useState(false);
   const [rightAuthDrawer, setRightAuthDrawer] = useState(false);
   const [dropdown, setDropdown] = useState(false);
   const [role] = useState(Role.customer);
+  const [profile, setProfile] = useState<User>();
+
+  useEffect(() => {
+    authStorage.getUserProfile() &&
+      setProfile(JSON.parse(authStorage.getUserProfile() || ""));
+  }, [authStorage]);
+
   const accountDropdownRef = useRef(null);
   const router = useRouter();
+
   useOnClickOutside({
     ref: accountDropdownRef,
     handler: () => setDropdown(false),
@@ -59,6 +68,11 @@ const useHeader = () => {
         ]
       : [];
   }, [routerPathConstant, router]);
+
+  const onLogout = useCallback(() => {
+    authStorage.clearDataStorage();
+    router.replace("/login");
+  }, []);
 
   const accountMenu = useMemo(() => {
     return role === Role.customer
@@ -122,6 +136,7 @@ const useHeader = () => {
               src: "/assets/icons/header/logout.svg",
               title: "Đăng xuất",
               link: "",
+              onClickItem: onLogout,
             },
           ],
         ]
@@ -134,6 +149,7 @@ const useHeader = () => {
   }, []);
 
   return {
+    profile,
     role,
     accountDropdownRef,
     headerMenu,

@@ -25,12 +25,10 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem("Quản lý Tour", "/manage/tours", <MdOutlineTour />),
-  getItem("Quản lý khách sạn", "/manage/hotels", <MdOutlineHotel />),
-  getItem("Quản lý khách hàng", "/manage/customers", <RiCustomerServiceLine />),
+  getItem("Quản lý tài khoản", "/admin/accounts", <MdOutlineTour />),
 ];
 
-const SupplierSidebar: FC<Props> = ({}) => {
+const AdminSidebar: FC<Props> = ({}) => {
   const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
@@ -59,4 +57,4 @@ const SupplierSidebar: FC<Props> = ({}) => {
   );
 };
 
-export default memo(SupplierSidebar);
+export default memo(AdminSidebar);

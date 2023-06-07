@@ -1,0 +1,1 @@
+export const UPDATE_TOKEN = 'update_token';

@@ -1,18 +1,23 @@
-import { FC, memo, useState } from "react";
+import { FC, memo, useState, useEffect, useCallback } from "react";
 
 import styles from "./style.module.scss";
 import MainLayout from "@/components/layouts/MainLayout";
 import { Col, DatePicker, Form, Input, InputNumber, Row, Select } from "antd";
 import UploadAvatar from "@/components/common/UploadAvatar/UploadAvatar";
 import { useRouter } from "next/router";
-import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { EditOutlined } from "@ant-design/icons";
 import { provinceList } from "@/public/assets/data/intData";
+import { User } from "@/types/common";
+import { authStorage } from "@/storage/authStorage";
+import { dateFormat } from "@/utils/patterns";
+import dayjs from "dayjs";
+import { patchUpdateProfileApi } from "@/api/services/auth";
+import { handleError } from "@/utils/helper";
+import { convertDatePickerToTimestamp } from "@/utils/converts";
+import SuccessModal from "@/components/common/Modal/SuccessModal";
 
 type Props = {};
-
-const formatBirthday = "YYYY-MM-DD";
 
 interface IRewardDiamond {
   name: string;
@@ -21,10 +26,14 @@ interface IRewardDiamond {
 
 const Account: FC<Props> = ({}) => {
   const router = useRouter();
-  const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const [profile, setProfile] = useState<User>();
 
-  const profile = {};
+  const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    setProfile(JSON.parse(authStorage.getUserProfile() || ""));
+  }, [authStorage]);
 
   const [avatar, setAvatar] = useState<string>("");
   const [avatarUrl, setAvatarUrl] = useState<string>("");
@@ -39,59 +48,44 @@ const Account: FC<Props> = ({}) => {
   const [rewardDiamond, setRewardDiamond] = useState<IRewardDiamond>(
     {} as IRewardDiamond,
   );
-  const [isRewardDiamondModal, setIsRewardDiamondModal] = useState(false);
 
-  const onFinish = async (values: any) => {
-    console.log("MTS22023", values);
+  useEffect(() => {
+    if (profile) {
+      setAvatar(profile?.avatar);
+      form.setFieldsValue({
+        name: profile.name,
+        birthday: dayjs(
+          moment.unix(profile.birthday).format(dateFormat),
+          dateFormat,
+        ),
+        address: profile.address,
+        phoneNumber: profile.phoneNumber,
+        email: profile.email,
+      });
+    }
+  }, [profile, form]);
 
-    //   const dataInfomation: any = {}
-    //   if (avatarUrl) dataInfomation.avatar = avatarUrl
-    //   if (values.name) dataInfomation.name = values.name
-    //   if (values.email) dataInfomation.email = values.email
-    //   if (typeof values.gender === 'number') dataInfomation.gender = values.gender
-    //   if (values.birthday) dataInfomation.birthday = moment(values.birthday).format(formatBirthday) || ''
-    //   if (Object.keys(dataInfomation).length) {
-    //     try {
-    //       const { data } = await patchUserInfomationApi(dataInfomation, profile.code)
-    //       if (data.data.accountInfoRewarded) {
-    //         setIsRewardDiamondModal(true)
-    //         setRewardDiamond({ name: "thông tin tài khoản", diamond: data.data.accountInfoRewarded })
-    //       }
-    //       const response = await getProfileApi(profile.code)
-    //       // dispatch(getProfileSuccess({ profile: response.data.data }))
-    //       dispatch(getProfileRequest({ userCode: profile.code }))
-    //       if (router.query.next) {
-    //         const { name, birthday, gender } = data.data || {}
-    //         const {addresses} = response?.data?.data || {}
-    //         if (!name) return message.warning("Bạn phải thêm tên người dùng để tiếp tục ứng tuyển!")
-    //         if (!data.data.phoneNumber) return message.warning("Bạn phải thêm số điện thoại để tiếp tục ứng tuyển!")
-    //         if (!birthday) return message.warning("Bạn phải thêm ngày sinh để tiếp tục ứng tuyển!")
-    //         if (typeof gender !== 'number') return message.warning("Bạn phải thêm giới tính để tiếp tục ứng tuyển!")
-    //         if (!addresses?.length) return message.warning("Bạn phải thêm địa chỉ để tiếp tục ứng tuyển!")
-    //         const slug = decodeURIComponent(router.query.next as string).split("/") || []
-    //         localStorage.setItem(storageConstant.localStorage.flagAutoApplyJob, slug[slug.length - 1])
-    //         if (name && data.data.phoneNumber && birthday && typeof gender === 'number' && addresses.length) {
-    //           const objRouter: any = { pathname: decodeURIComponent(String(router.query.next)) }
-    //           if (router.query.attachNext) objRouter.query = { next: decodeURIComponent(String(router.query.attachNext)) }
-    //           router.push(objRouter)
-    //         }
-    //       }
-    //       else message.success(t('profile.updateSuccess'))
-    //     } catch (error) {
-    //     //   handleError(error)
-    //     }
-    //   }
-  };
-
-  //   const valueForm = {
-  //     name: profile.name || "",
-  //     birthday: profile.birthday ? moment(profile?.birthday, formatBirthday) : "",
-  //     gender: profile.gender ?? "",
-  //     email: profile.email || "",
-  //     phoneNumber: profile.phoneNumber || "",
-  //   };
-
-  // const renderGender = gender => Gender[gender]
+  const onFinish = useCallback(
+    async (values: any) => {
+      console.log(convertDatePickerToTimestamp(values.birthday));
+      try {
+        if (profile) {
+          const response = await patchUpdateProfileApi(profile?.id, {
+            name: values.name,
+            birthday: convertDatePickerToTimestamp(values.birthday),
+            address: values.address,
+            phoneNumber: values.phoneNumber,
+            email: values.email,
+          });
+          authStorage.setUserProfile(response.data.data);
+        }
+        setModalVisible(true);
+      } catch (error) {
+        handleError(error);
+      }
+    },
+    [profile],
+  );
 
   const renderActionBtn = () => (
     <div className={styles.account_action}>
@@ -147,7 +141,7 @@ const Account: FC<Props> = ({}) => {
                   <Form.Item name="birthday">
                     <DatePicker
                       size="large"
-                      format="DD-MM-YYYY"
+                      format={dateFormat}
                       disabledDate={(now) => now && now > moment()}
                       placeholder="Chọn ngày sinh"
                       allowClear={false}
@@ -157,7 +151,7 @@ const Account: FC<Props> = ({}) => {
                 </Col>
                 <Col xs={24} md={12}>
                   <span className={styles.item_label}>Địa chỉ</span>
-                  <Form.Item className="profile" name="gender">
+                  <Form.Item className="profile" name="address">
                     <Select
                       size="large"
                       placeholder="Tỉnh"
@@ -249,6 +243,11 @@ const Account: FC<Props> = ({}) => {
           /> */}
         </div>
       </div>
+      <SuccessModal
+        onCancel={() => setModalVisible(false)}
+        visible={modalVisible}
+        title="Sửa tài khoản thành công!"
+      />
     </MainLayout>
   );
 };

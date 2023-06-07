@@ -4,6 +4,8 @@
 //     callback?: () => void
 //   }
 
+import { message } from "antd";
+
 // export const handleError = (error, options: IHandleError = {}): void => {
 //     if (typeof error === "string") {
 //       message.error(error);
@@ -50,7 +52,9 @@ export const getTokenUser = () => {
   return token;
 };
 
-export const matchYoutubeUrl = (url:any) => {
+export const isServer = () => typeof window === "undefined";
+
+export const matchYoutubeUrl = (url: any) => {
   const p =
     /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
   if (url.match(p)) {
@@ -64,4 +68,11 @@ export const getEmbedLinkYoutube = (youtubeLink: string) => {
   const urlSearchParams = new URLSearchParams(`?${tempArraySearch[1]}`);
   const params = Object.fromEntries(urlSearchParams.entries());
   return `https://www.youtube.com/embed/${params.v}`;
+};
+
+export const handleError = (error: any) => {
+  if (typeof error === "string") {
+    message.error(error);
+    return;
+  }
 };
