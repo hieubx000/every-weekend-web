@@ -1,4 +1,3 @@
-// check again
 declare namespace Auth {
   interface SignupDataPayload {
     userName: string;
@@ -13,7 +12,7 @@ declare namespace Auth {
     password: string;
   }
 
-  interface UpdateProfile {
+  interface UpdateProfilePayload {
     name: string;
     birthday?: number;
     address?: number;

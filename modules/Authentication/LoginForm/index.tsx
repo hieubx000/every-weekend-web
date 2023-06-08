@@ -7,6 +7,7 @@ import { postLogInApi } from "@/api/services/auth";
 import { handleError } from "@/utils/helper";
 import { useRouter } from "next/router";
 import { authStorage } from "@/storage/authStorage";
+import { Role } from "@/types/commonTypes";
 
 type Props = {};
 
@@ -15,12 +16,29 @@ const LoginForm: FC<Props> = ({}) => {
 
   const onFinish = useCallback(async (values: any) => {
     try {
+      const role = router.pathname.slice(7) as unknown as Role;
+
       const response = await postLogInApi(values);
-      // dispatch(setProfile(response.data.data.data));
-      // dispatch(setTokenUser(response.data.data.token));
-      authStorage.setUserToken(response.data.data.token);
-      authStorage.setUserProfile(response.data.data.data);
-      router.push("/");
+
+      authStorage.setUserProfile({
+        token: response.data.data.token,
+        role: role,
+        profile: response.data.data.data,
+      });
+      switch (role) {
+        case Role.customer:
+          router.push("/");
+          break;
+        case Role.supplier:
+          router.push("/manage/tours");
+          break;
+        case Role.admin:
+          router.push("/admin/accounts");
+          break;
+        default:
+          router.push("/");
+          break;
+      }
     } catch (error) {
       handleError(error);
     }
@@ -35,7 +53,7 @@ const LoginForm: FC<Props> = ({}) => {
       <img src="/assets/images/logo.png" alt="" title="" />
       <Form.Item
         label="Tên đăng nhập"
-        name="username"
+        name="userName"
         rules={[{ required: true, message: "Vui lòng nhập tên đăng nhập!" }]}>
         <Input size="large" className={styles.form_item} />
       </Form.Item>

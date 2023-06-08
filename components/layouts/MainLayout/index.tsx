@@ -4,6 +4,8 @@ import styles from "./style.module.scss";
 import MainHeader from "@/components/common/MainHeader";
 import TopBar from "@/components/common/TopBar";
 import Loading from "@/components/common/Loading";
+import useUserProfile from "@/hooks/useUserProfile";
+import AuthHeader from "@/components/common/AuthHeader";
 
 type Props = {
   children: React.ReactNode;
@@ -12,6 +14,7 @@ type Props = {
 
 const MainLayout: FC<Props> = ({ children, center }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const { userToken } = useUserProfile();
 
   useEffect(() => {
     setTimeout(() => {
@@ -23,7 +26,7 @@ const MainLayout: FC<Props> = ({ children, center }) => {
   return (
     <div className={styles.container}>
       <TopBar />
-      <MainHeader />
+      {userToken ? <MainHeader /> : <AuthHeader />}
       <div className={center ? styles.center : ""}>
         {isLoading ? (
           <div className={styles.loading}>

@@ -25,7 +25,7 @@ export const postLogInApi = async (
 
 export const patchUpdateProfileApi = async (
   id: string,
-  data: Auth.UpdateProfile,
+  data: Auth.UpdateProfilePayload,
 ): Promise<AxiosResponse> => {
   const res = await requestApi().patch(`/user/${id}`, data);
 

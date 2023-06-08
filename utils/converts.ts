@@ -1,8 +1,8 @@
 import { provinceList } from "@/public/assets/data/intData";
-import { Role } from "@/types/common";
+import { Role } from "@/types/commonTypes";
 import moment from "moment";
 
-export const convertRoleEnumToName = (role: Role) => {
+export const convertRoleEnumToName = (role?: Role) => {
   switch (role) {
     case Role.guest:
       return "Khách vãng lai";

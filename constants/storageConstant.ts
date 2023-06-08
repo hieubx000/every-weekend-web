@@ -1,6 +1,5 @@
 export const storageConstant = {
   localStorage: {
-    userToken: "ew_user_token",
     userProfile: "ew_user_profile",
     // userCode: 'f_user_code',
     // lang: 'f_lang',
