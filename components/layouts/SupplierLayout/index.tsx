@@ -9,6 +9,8 @@ import CustomBreadcrumb, {
   IBreadcrumb,
 } from "@/components/common/CustomBreadcrumb";
 import BreadcrumbItem from "antd/es/breadcrumb/BreadcrumbItem";
+import useUserProfile from "@/hooks/useUserProfile";
+import AuthHeader from "@/components/common/AuthHeader";
 
 type Props = {
   children: React.ReactNode;
@@ -17,7 +19,8 @@ type Props = {
 
 const SupplierLayout: FC<Props> = ({ children, breadcrumbItems }) => {
   const [isLoading, setIsLoading] = useState(true);
-  
+  const { userToken } = useUserProfile();
+
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -26,7 +29,7 @@ const SupplierLayout: FC<Props> = ({ children, breadcrumbItems }) => {
 
   return (
     <div className={styles.container}>
-      <MainHeader />
+      {userToken ? <MainHeader /> : <AuthHeader />}
       <div className={styles.content}>
         <SupplierSidebar />
         <div className={styles.content_children}>

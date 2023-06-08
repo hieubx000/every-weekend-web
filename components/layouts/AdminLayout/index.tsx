@@ -9,6 +9,8 @@ import CustomBreadcrumb, {
 import AdminSidebar from "@/components/common/AdminSidebar";
 
 import styles from "./style.module.scss";
+import useUserProfile from "@/hooks/useUserProfile";
+import AuthHeader from "@/components/common/AuthHeader";
 
 type Props = {
   children: React.ReactNode;
@@ -17,6 +19,7 @@ type Props = {
 
 const SupplierLayout: FC<Props> = ({ children, breadcrumbItems }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const { userToken } = useUserProfile();
 
   useEffect(() => {
     setTimeout(() => {
@@ -26,7 +29,7 @@ const SupplierLayout: FC<Props> = ({ children, breadcrumbItems }) => {
 
   return (
     <div className={styles.container}>
-      <MainHeader />
+      {userToken ? <MainHeader /> : <AuthHeader />}
       <div className={styles.content}>
         <AdminSidebar />
         <div className={styles.content_children}>

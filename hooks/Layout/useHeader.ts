@@ -2,20 +2,17 @@ import { routerPathConstant } from "@/constants/routerConstant";
 import { useRouter } from "next/router";
 import { useMemo, useCallback, useState, useRef, useEffect } from "react";
 import useOnClickOutside from "../useClickOutside";
-import { Role, User } from "@/types/common";
+import { User } from "@/types/common";
+import { Role } from "@/types/commonTypes";
 import { authStorage } from "@/storage/authStorage";
+import useUserProfile from "../useUserProfile";
 
 const useHeader = () => {
   const [leftDrawer, setLeftDrawer] = useState(false);
   const [rightAuthDrawer, setRightAuthDrawer] = useState(false);
   const [dropdown, setDropdown] = useState(false);
-  const [role] = useState(Role.customer);
-  const [profile, setProfile] = useState<User>();
 
-  useEffect(() => {
-    authStorage.getUserProfile() &&
-      setProfile(JSON.parse(authStorage.getUserProfile() || ""));
-  }, [authStorage]);
+  const { userRole, userProfile, userToken } = useUserProfile();
 
   const accountDropdownRef = useRef(null);
   const router = useRouter();
@@ -26,7 +23,7 @@ const useHeader = () => {
   });
 
   const headerMenu = useMemo(() => {
-    return role === Role.customer
+    return userRole === Role.customer
       ? [
           {
             text: "Điểm đến",
@@ -67,15 +64,42 @@ const useHeader = () => {
           },
         ]
       : [];
-  }, [routerPathConstant, router]);
+  }, [routerPathConstant, router, userRole]);
 
   const onLogout = useCallback(() => {
     authStorage.clearDataStorage();
     router.replace("/login");
   }, []);
 
+  const onChangeRoleToCustomer = useCallback(() => {
+    authStorage.setUserProfile({
+      role: Role.customer,
+      token: userToken,
+      profile: userProfile,
+    });
+    router.push("/");
+  }, [ userToken, userProfile]);
+
+  const onChangeRoleToSupplier = useCallback(() => {
+    authStorage.setUserProfile({
+      role: Role.supplier,
+      token: userToken,
+      profile: userProfile,
+    });
+    router.push("/manage/tours");
+  }, [ userToken, userProfile]);
+
+  const onClickItemDrawer = useCallback((url: string) => {
+    setDropdown(false);
+    router.push(url);
+  }, []);
+  
+  const onClickItemHeader = useCallback((url: string) => {
+    router.push(url);
+  }, []);
+
   const accountMenu = useMemo(() => {
-    return role === Role.customer
+    return userRole == Role.customer
       ? [
           [
             {
@@ -124,6 +148,7 @@ const useHeader = () => {
               src: "/assets/icons/header/supplier.svg",
               title: "Chế độ nhà cung cấp",
               link: routerPathConstant.homepage,
+              onClickItem: onChangeRoleToSupplier,
             },
             {
               id: "",
@@ -140,17 +165,35 @@ const useHeader = () => {
             },
           ],
         ]
-      : [];
-  }, [routerPathConstant]);
-
-  const onClickItemDrawer = useCallback((url: string) => {
-    setDropdown(false);
-    router.push(url);
-  }, []);
+      : [
+          [
+            {
+              id: routerPathConstant.homepage,
+              src: "/assets/icons/header/supplier.svg",
+              title: "Chế độ khách hàng",
+              link: routerPathConstant.homepage,
+              onClickItem: onChangeRoleToCustomer,
+            },
+            {
+              id: "",
+              src: "/assets/icons/header/change_password.svg",
+              title: "Thay đổi mật khẩu",
+              link: "",
+            },
+            {
+              id: routerPathConstant.homepage,
+              src: "/assets/icons/header/logout.svg",
+              title: "Đăng xuất",
+              link: "",
+              onClickItem: onLogout,
+            },
+          ],
+        ];
+  }, [routerPathConstant, userRole]);
 
   return {
-    profile,
-    role,
+    userProfile,
+    userRole,
     accountDropdownRef,
     headerMenu,
     accountMenu,
@@ -161,6 +204,7 @@ const useHeader = () => {
     setRightAuthDrawer,
     setDropdown,
     onClickItemDrawer,
+    onClickItemHeader,
   };
 };
 

@@ -16,6 +16,7 @@ import { patchUpdateProfileApi } from "@/api/services/auth";
 import { handleError } from "@/utils/helper";
 import { convertDatePickerToTimestamp } from "@/utils/converts";
 import SuccessModal from "@/components/common/Modal/SuccessModal";
+import useUserProfile from "@/hooks/useUserProfile";
 
 type Props = {};
 
@@ -27,13 +28,14 @@ interface IRewardDiamond {
 const Account: FC<Props> = ({}) => {
   const router = useRouter();
   const [form] = Form.useForm();
-  const [profile, setProfile] = useState<User>();
+  // const [profile, setProfile] = useState<User>();
+  const { userProfile, userRole, userToken } = useUserProfile();
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    setProfile(JSON.parse(authStorage.getUserProfile() || ""));
-  }, [authStorage]);
+  // useEffect(() => {
+  //   setProfile(JSON.parse(authStorage.getUserProfile() || ""));
+  // }, [authStorage]);
 
   const [avatar, setAvatar] = useState<string>("");
   const [avatarUrl, setAvatarUrl] = useState<string>("");
@@ -50,41 +52,44 @@ const Account: FC<Props> = ({}) => {
   );
 
   useEffect(() => {
-    if (profile) {
-      setAvatar(profile?.avatar);
+    if (userProfile) {
+      setAvatar(userProfile?.avatar);
       form.setFieldsValue({
-        name: profile.name,
+        name: userProfile.name,
         birthday: dayjs(
-          moment.unix(profile.birthday).format(dateFormat),
+          moment.unix(userProfile.birthday).format(dateFormat),
           dateFormat,
         ),
-        address: profile.address,
-        phoneNumber: profile.phoneNumber,
-        email: profile.email,
+        address: userProfile.address,
+        phoneNumber: userProfile.phoneNumber,
+        email: userProfile.email,
       });
     }
-  }, [profile, form]);
+  }, [userProfile, form]);
 
   const onFinish = useCallback(
     async (values: any) => {
-      console.log(convertDatePickerToTimestamp(values.birthday));
       try {
-        if (profile) {
-          const response = await patchUpdateProfileApi(profile?.id, {
+        if (userProfile) {
+          const response = await patchUpdateProfileApi(userProfile?.id, {
             name: values.name,
             birthday: convertDatePickerToTimestamp(values.birthday),
             address: values.address,
             phoneNumber: values.phoneNumber,
             email: values.email,
           });
-          authStorage.setUserProfile(response.data.data);
+          authStorage.setUserProfile({
+            role: userRole,
+            token: userToken,
+            profile: response.data.data,
+          });
         }
         setModalVisible(true);
       } catch (error) {
         handleError(error);
       }
     },
-    [profile],
+    [authStorage, userProfile, userRole, userToken],
   );
 
   const renderActionBtn = () => (

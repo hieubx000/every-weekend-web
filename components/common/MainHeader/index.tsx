@@ -7,7 +7,7 @@ import LinkTo from "../LinkTo";
 import defaultConstant from "@/constants/defaultConstant";
 
 import useHeader from "@/hooks/Layout/useHeader";
-import { Role } from "@/types/common";
+import { Role } from "@/types/commonTypes";
 import { convertRoleEnumToName } from "@/utils/converts";
 import { authStorage } from "@/storage/authStorage";
 
@@ -15,8 +15,8 @@ type Props = {};
 
 const MainHeader: FC<Props> = () => {
   const {
-    profile,
-    role,
+    userProfile,
+    userRole,
     accountDropdownRef,
     headerMenu,
     accountMenu,
@@ -27,10 +27,11 @@ const MainHeader: FC<Props> = () => {
     setRightAuthDrawer,
     setDropdown,
     onClickItemDrawer,
+    onClickItemHeader,
   } = useHeader();
 
   const renderAuthorization = () =>
-    role !== Role.guest ? (
+    userRole !== Role.guest ? (
       <div className={styles.header_auth}>
         <div className={styles.customer} ref={accountDropdownRef}>
           <div
@@ -38,7 +39,7 @@ const MainHeader: FC<Props> = () => {
             onClick={() => setDropdown(!dropdown)}>
             <div className={styles.avatar}>
               <img
-                src={profile?.avatar || defaultConstant.defaultAvatarUser}
+                src={userProfile?.avatar || defaultConstant.defaultAvatarUser}
                 className="object-fit-cover"
                 alt=""
                 width="40"
@@ -46,8 +47,10 @@ const MainHeader: FC<Props> = () => {
               />
             </div>
             <div className={styles.info}>
-              <div className={styles.name}>{profile?.name}</div>
-              <div className={styles.role}>{convertRoleEnumToName(role)}</div>
+              <div className={styles.name}>{userProfile?.name}</div>
+              <div className={styles.role}>
+                {convertRoleEnumToName(userRole)}
+              </div>
             </div>
             <div style={{ color: "var(--white-color)", paddingRight: ".5rem" }}>
               <BsChevronDown size={20} />
@@ -78,11 +81,13 @@ const MainHeader: FC<Props> = () => {
                   <div className={styles.img}>
                     <img
                       alt=""
-                      src={profile?.avatar || defaultConstant.defaultAvatarUser}
+                      src={
+                        userProfile?.avatar || defaultConstant.defaultAvatarUser
+                      }
                     />
                   </div>
                   <div className={styles.info}>
-                    <div className={styles.name}>{profile?.name}</div>
+                    <div className={styles.name}>{userProfile?.name}</div>
                     {/* {profile.verifyKyc ? ( */}
                     {true ? (
                       <div className={styles.verify}>
@@ -139,12 +144,14 @@ const MainHeader: FC<Props> = () => {
                     height="50"
                     className="object-fit-cover"
                     alt=""
-                    src={profile?.avatar || defaultConstant.defaultAvatarUser}
+                    src={
+                      userProfile?.avatar || defaultConstant.defaultAvatarUser
+                    }
                   />
                 </div>
                 <div className={styles.info}>
-                  <div className={styles.name}>{profile?.name}</div>
-                  <div>{profile?.userName}</div>
+                  <div className={styles.name}>{userProfile?.name}</div>
+                  <div>{userProfile?.userName}</div>
                 </div>
               </div>
 
@@ -200,9 +207,12 @@ const MainHeader: FC<Props> = () => {
               </div>
               <div className={styles.navigator}>
                 {headerMenu.map((item, i) => (
-                  <LinkTo href={item.href} className={styles.menu} key={i}>
+                  <div
+                    onClick={() => onClickItemHeader(item.href)}
+                    className={styles.menu}
+                    key={i}>
                     <span>{item.text}</span>
-                  </LinkTo>
+                  </div>
                 ))}
               </div>
             </Drawer>
@@ -218,9 +228,11 @@ const MainHeader: FC<Props> = () => {
             {headerMenu.map((item, i) => (
               <div className={styles.menu} key={i}>
                 {!item.children ? (
-                  <LinkTo href={item.href} className={styles.link}>
+                  <div
+                    onClick={() => onClickItemHeader(item.href)}
+                    className={styles.link}>
                     {item.text}
-                  </LinkTo>
+                  </div>
                 ) : (
                   <Popover
                     placement="bottom"
@@ -228,7 +240,9 @@ const MainHeader: FC<Props> = () => {
                       <div>
                         {item.children.map((it, index) => (
                           <div key={index} className={styles.link_popover}>
-                            <a href={it.href}>{it.text}</a>
+                            <a onClick={() => onClickItemHeader(it.href)}>
+                              {it.text}
+                            </a>
                           </div>
                         ))}
                       </div>
