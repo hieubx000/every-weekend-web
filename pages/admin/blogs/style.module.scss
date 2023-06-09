@@ -1,0 +1,15 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  
+    &_top {
+      display: flex;
+      justify-content: space-between;
+  
+      &_search {
+        width: 300px;
+      }
+    }
+  }
+  

@@ -1,5 +1,6 @@
 import { FC, memo, useState, useEffect } from "react";
 import { RiCustomerServiceLine } from "react-icons/ri";
+import { TbBrandBlogger } from "react-icons/tb";
 import { MdOutlineTour, MdOutlineHotel } from "react-icons/md";
 import { Menu, MenuProps } from "antd";
 
@@ -28,6 +29,7 @@ const items: MenuItem[] = [
   getItem("Quản lý Tour", "/manage/tours", <MdOutlineTour />),
   getItem("Quản lý khách sạn", "/manage/hotels", <MdOutlineHotel />),
   getItem("Quản lý khách hàng", "/manage/customers", <RiCustomerServiceLine />),
+  getItem("Quản lý bài đăng", "/manage/blogs", <TbBrandBlogger />),
 ];
 
 const SupplierSidebar: FC<Props> = ({}) => {

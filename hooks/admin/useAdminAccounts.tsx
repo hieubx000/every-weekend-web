@@ -2,15 +2,16 @@ import { useRouter } from "next/router";
 import { FC, useCallback, useEffect, useState } from "react";
 
 import { MdDeleteOutline, MdOutlineModeEdit } from "react-icons/md";
-import { Space, Tag } from "antd";
+import { Popconfirm, Space, Tag, message } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { IBreadcrumb } from "@/components/common/CustomBreadcrumb";
 import { handleError } from "@/utils/helper";
-import { getListAccountApi } from "@/api/services/auth";
+import { deleteUserApi, getListAccountApi } from "@/api/services/auth";
 import {
   convertEnumToProvince,
   convertTimestampToDate,
 } from "@/utils/converts";
+import ActionConfirm from "@/components/common/ActionConfirm";
 
 interface DataType {
   key: string;
@@ -27,6 +28,16 @@ interface DataType {
 const useAdminAccounts = () => {
   const [tableData, setTableData] = useState<DataType[]>([]);
   const router = useRouter();
+
+  const handleDeleteUser = useCallback(async (id: string) => {
+    try {
+      await deleteUserApi(id);
+      getData()
+      message.success("Xóa tài khoản thành công");
+    } catch (error) {
+      message.error("Xóa tài khoản thất bại");
+    }
+  }, []);
 
   const tableColumns: ColumnsType<DataType> = [
     {
@@ -82,15 +93,12 @@ const useAdminAccounts = () => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <Space size="small">
-          <MdOutlineModeEdit
-            onClick={() => {
-              //   router.push(`/manage/tours/${record.key}`);
-            }}
-            size={20}
-          />
+        <ActionConfirm
+          title="Xóa tài khoản"
+          description="Bạn chắc chắn muốn xóa tài khoản này?"
+          handleConfirm={handleDeleteUser.bind(this, record.id)}>
           <MdDeleteOutline size={20} />
-        </Space>
+        </ActionConfirm>
       ),
     },
   ];
@@ -101,8 +109,8 @@ const useAdminAccounts = () => {
       const data: DataType[] = [];
       response.data.data.map((item: any) => {
         data.push({
-          key: item.id,
-          id: item.id,
+          key: item._id,
+          id: item._id,
           avatar: item.avatar,
           name: item.name,
           userName: item.userName,

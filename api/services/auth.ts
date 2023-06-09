@@ -31,3 +31,11 @@ export const patchUpdateProfileApi = async (
 
   return res;
 };
+
+export const deleteUserApi = async (
+  id: string,
+): Promise<AxiosResponse> => {
+  const res = await requestApi().delete(`/user/${id}`);
+
+  return res;
+};

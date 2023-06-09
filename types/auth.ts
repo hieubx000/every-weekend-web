@@ -13,6 +13,7 @@ declare namespace Auth {
   }
 
   interface UpdateProfilePayload {
+    avatar: string;
     name: string;
     birthday?: number;
     address?: number;

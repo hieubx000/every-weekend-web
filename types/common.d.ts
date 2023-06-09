@@ -43,3 +43,7 @@ export type User = {
   avatar: string;
   address: number;
 };
+
+export interface Blog extends Blog.BlogDataPayload {
+  id: string;
+}
