@@ -5,6 +5,7 @@ import { Menu, MenuProps } from "antd";
 
 import styles from "./style.module.scss";
 import { useRouter } from "next/router";
+import { TbBrandBlogger } from "react-icons/tb";
 
 type Props = {};
 
@@ -26,6 +27,7 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem("Quản lý tài khoản", "/admin/accounts", <MdOutlineTour />),
+  getItem("Quản lý bài đăng", "/admin/blogs", <TbBrandBlogger />),
 ];
 
 const AdminSidebar: FC<Props> = ({}) => {

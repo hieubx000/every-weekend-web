@@ -1,6 +1,8 @@
 import { provinceList } from "@/public/assets/data/intData";
 import { Role } from "@/types/commonTypes";
 import moment from "moment";
+import { dateFormat } from "./patterns";
+import { blogCategory, statusList } from "./initData";
 
 export const convertRoleEnumToName = (role?: Role) => {
   switch (role) {
@@ -43,6 +45,10 @@ export const convertDatePickerToTimestamp = (date: any) => {
   return parseInt(moment(date.$d).format("X"));
 };
 
+export const convertIso8061ToDate = (date: any) => {
+  return moment(date).format(dateFormat);
+};
+
 export const numberFormatter = (value: number) => {
   const numberFormatter = Intl.NumberFormat("en-US");
   const formatted = numberFormatter.format(value);
@@ -54,5 +60,34 @@ export const convertEnumToProvince = (number: number) => {
   const res = provinceList.find((item) => {
     return item.id === number;
   });
+  return res?.name;
+};
+
+export const convertEnumToStatus = (number: number) => {
+  const res = statusList.find((item) => {
+    return item.id === number;
+  });
+
+  return res?.name;
+};
+
+export const convertEnumStatusToColorTag = (number: number) => {
+  switch (number) {
+    case 1:
+      return "processing";
+    case 2:
+      return "success";
+    case 3:
+      return "error";
+    default:
+      return "processing";
+  }
+};
+
+export const convertEnumToCategory = (number: number) => {
+  const res = blogCategory.find((item) => {
+    return item.id === number;
+  });
+
   return res?.name;
 };

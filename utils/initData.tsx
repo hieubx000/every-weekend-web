@@ -15,4 +15,38 @@ const hotelFacilities = [
   },
 ];
 
+export const blogCategory = [
+  {
+    id: 1,
+    name: "Tin tức du lịch",
+  },
+  {
+    id: 2,
+    name: "Điểm đến thú vị",
+  },
+  {
+    id: 3,
+    name: "Ẩm thực",
+  },
+  {
+    id: 4,
+    name: "Bàn luận",
+  },
+];
+
+export const statusList = [
+  {
+    id: 1,
+    name: "Chờ kiểm duyệt",
+  },
+  {
+    id: 2,
+    name: "Công khai",
+  },
+  {
+    id: 3,
+    name: "Bị ẩn",
+  },
+];
+
 export default { hotelFacilities };

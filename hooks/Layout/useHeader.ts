@@ -54,8 +54,8 @@ const useHeader = () => {
           },
           {
             text: "Blog",
-            href: routerPathConstant.homepage,
-            active: router.pathname.includes(routerPathConstant.homepage),
+            href: routerPathConstant.blogs,
+            active: router.pathname.includes(routerPathConstant.blogs),
           },
           {
             text: "Liên hệ",

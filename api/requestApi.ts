@@ -1,12 +1,12 @@
 /* eslint-disable no-param-reassign */
+import { authStorage } from "@/storage/authStorage";
 import { message } from "antd";
 import axios, { AxiosInstance } from "axios";
 
-
-let processFetchRefreshToken = false;
-
 const requestApi = (configuration: any = {}): AxiosInstance => {
-//   const tokenUser = configuration.token || getTokenUser() || null;
+  const tokenUser = authStorage.getUserProfile()
+    ? JSON.parse(authStorage.getUserProfile() || "").token
+    : undefined;
 
   let headers = {
     "Content-Type": "application/json",
@@ -21,38 +21,13 @@ const requestApi = (configuration: any = {}): AxiosInstance => {
     ...configuration,
   };
 
-  // fix bug: unable_to_verify_leaf_signature
-  //   if (process.env.NEXT_PUBLIC_WEB_ENV === configConstant.environment.development) {
-  //     initAxios = {
-  //       ...initAxios,
-  //       httpsAgent: new https.Agent({ rejectUnauthorized: false }),
-  //     }
-  //   }
-
   const axiosInstance = axios.create(initAxios);
 
   axiosInstance.interceptors.request.use(
     async (config) => {
-      //   config.params = { ...config.params, platform: 'web' }
-
-      //   if (process.env.NEXT_PUBLIC_WEB_ENV !== configConstant.environment.development && tokenUser) {
-      //     config.headers.Authorization = `Bearer ${tokenUser}`
-      //   }
-
-      //   if (!isServer() && !processFetchRefreshToken) {
-      //     if (localStorage.getItem(storageConstant.localStorage.refreshToken)
-      //       && localStorage.getItem(storageConstant.localStorage.expiredToken)
-      //       && localStorage.getItem(storageConstant.localStorage.userCode) && getTokenUser()
-      //     ) {
-      //       const expiredTime = differenceInHours(
-      //         new Date(Number(localStorage.getItem(storageConstant.localStorage.expiredToken)))
-      //         , Date.now());
-
-      //       if (expiredTime > 0 && expiredTime < 6) {
-      //         fetchRefreshToken();
-      //       }
-      //     }
-      //   }
+      if (tokenUser) {
+        config.headers.Authorization = `Bearer ${tokenUser}`;
+      }
 
       return config;
     },
@@ -62,37 +37,6 @@ const requestApi = (configuration: any = {}): AxiosInstance => {
   axiosInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
-      //   if (error?.response?.data?.errorCode === errorCodeConstant.invalidHeader) {
-      //     deleteStorageAndRedirectLogin()
-      //   }
-
-      // const originalRequest = error.config;
-      // if ([401, 403].includes(error?.response?.status) && getAccessTokenCookieCSR()) {
-      //   if (process.env.NEXT_PUBLIC_WEB_ENV !== configConstant.environment.production) {
-      //     message.error(`Code: ${error?.response?.status}`)
-      //     console.error(`Code: ${error?.response?.status}. Message: ${error?.response?.data.message}`)
-      //   }
-      //   try {
-      //     const newAccessToken = await fetchRefreshToken();
-
-      //     if (process.env.NEXT_PUBLIC_WEB_ENV !== configConstant.environment.development) {
-      //       originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
-      //     } else {
-      //       const decoded: { uid: string, userCode: string } = jwtDecode(newAccessToken) || {};
-      //       originalRequest.headers = {
-      //         ...originalRequest.headers,
-      //         'x-fjob-user-id': decoded.uid,
-      //         'x-fjob-role': 'user',
-      //         'x-fjob-user-code': decoded.userCode,
-      //       }
-      //     }
-      //     axiosInstance(originalRequest);
-      //     return
-      //   } catch (e) {
-      //     deleteStorageAndRedirectLogin();
-      //   }
-      // }
-
       if (error?.response?.status === 503) {
         message.error(
           "Hệ thống đang bảo trì, bạn vui lòng chờ trong giây lát!",
@@ -105,57 +49,5 @@ const requestApi = (configuration: any = {}): AxiosInstance => {
 
   return axiosInstance;
 };
-
-// const fetchRefreshToken = async () => {
-//   processFetchRefreshToken = true
-//   try {
-//     fetch(`${process.env.NEXT_PUBLIC_API_URL}/${configConstant.prefixDomain.auth}/users/renew-token`, {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify({
-//         refreshToken: localStorage.getItem(storageConstant.localStorage.refreshToken) || "",
-//         userCode: localStorage.getItem(storageConstant.localStorage.userCode) || ""
-//       })
-//     })
-//       .then(response => response.json())
-//       .then(response => {
-//         if (response.errorCode) {
-//           removeCookieCSR(storageConstant.cookie.accessToken)
-//           removeCookieCSR(storageConstant.cookie.userRole)
-
-//           removeLocalStorageWhenLogout()
-//           window.location.href = routerPathConstant.signIn
-//           return
-//         }
-
-//         const { accessToken, refreshToken, userCode, expiredAt } = response.data
-
-//         const hoursExpires = differenceInHours(new Date(expiredAt), Date.now())
-
-//         localStorage.setItem(storageConstant.localStorage.refreshToken, refreshToken)
-//         localStorage.setItem(storageConstant.localStorage.userCode, userCode)
-//         localStorage.setItem(storageConstant.localStorage.expiredToken, expiredAt)
-
-//         setAccessTokenCookieCSR({ accessToken, hoursExpires })
-//         return accessToken;
-//       })
-//   } catch (error) {
-//     removeCookieCSR(storageConstant.cookie.accessToken)
-//     removeCookieCSR(storageConstant.cookie.userRole)
-
-//     removeLocalStorageWhenLogout()
-//     window.location.href = routerPathConstant.signIn
-//   } finally {
-//     processFetchRefreshToken = false
-//   }
-// }
-
-// const deleteStorageAndRedirectLogin = () => {
-//   destroyCookie(null, storageConstant.cookie.accessToken, { path: '/' })
-//   removeLocalStorageWhenLogout();
-//   window.location.href = `${routerPathConstant.signIn}?next=${window.location.href}`
-// }
 
 export default requestApi;

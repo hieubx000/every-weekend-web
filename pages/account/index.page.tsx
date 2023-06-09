@@ -28,32 +28,13 @@ interface IRewardDiamond {
 const Account: FC<Props> = ({}) => {
   const router = useRouter();
   const [form] = Form.useForm();
-  // const [profile, setProfile] = useState<User>();
-  const { userProfile, userRole, userToken } = useUserProfile();
-
   const [modalVisible, setModalVisible] = useState(false);
-
-  // useEffect(() => {
-  //   setProfile(JSON.parse(authStorage.getUserProfile() || ""));
-  // }, [authStorage]);
-
-  const [avatar, setAvatar] = useState<string>("");
-  const [avatarUrl, setAvatarUrl] = useState<string>("");
-
-  const [phoneNumberInput, setPhoneNumberInput] = useState("");
-  const [emailInput, setEmailInput] = useState("");
-
-  const [isChangePhoneNumberModal, setIsChangePhoneNumberModal] =
-    useState(false);
-  const [isChangeEmailModal, setIsChangeEmailModal] = useState(false);
-
-  const [rewardDiamond, setRewardDiamond] = useState<IRewardDiamond>(
-    {} as IRewardDiamond,
-  );
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const { userProfile, userRole, userToken } = useUserProfile();
 
   useEffect(() => {
     if (userProfile) {
-      setAvatar(userProfile?.avatar);
+      setImageUrl(userProfile?.avatar);
       form.setFieldsValue({
         name: userProfile.name,
         birthday: dayjs(
@@ -72,6 +53,7 @@ const Account: FC<Props> = ({}) => {
       try {
         if (userProfile) {
           const response = await patchUpdateProfileApi(userProfile?.id, {
+            avatar: imageUrl,
             name: values.name,
             birthday: convertDatePickerToTimestamp(values.birthday),
             address: values.address,
@@ -89,7 +71,7 @@ const Account: FC<Props> = ({}) => {
         handleError(error);
       }
     },
-    [authStorage, userProfile, userRole, userToken],
+    [authStorage, userProfile, userRole, userToken, imageUrl],
   );
 
   const renderActionBtn = () => (
@@ -113,9 +95,8 @@ const Account: FC<Props> = ({}) => {
                 <div className={styles.account_avatar}>
                   <Form.Item className="cursor-pointer">
                     <UploadAvatar
-                      avatar={avatar}
-                      setAvatar={setAvatar}
-                      setAvatarUrl={setAvatarUrl}
+                      imageUrl={imageUrl}
+                      setImageUrl={setImageUrl}
                     />
                   </Form.Item>
                   <img

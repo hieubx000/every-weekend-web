@@ -17,7 +17,6 @@ const LoginForm: FC<Props> = ({}) => {
   const onFinish = useCallback(async (values: any) => {
     try {
       const role = router.pathname.slice(7) as unknown as Role;
-
       const response = await postLogInApi(values);
 
       authStorage.setUserProfile({
@@ -42,7 +41,7 @@ const LoginForm: FC<Props> = ({}) => {
     } catch (error) {
       handleError(error);
     }
-  }, []);
+  }, [router]);
 
   return (
     <Form

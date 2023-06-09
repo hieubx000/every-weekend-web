@@ -1,28 +1,19 @@
+import React, { useState } from "react";
+
 import { message, Upload } from "antd";
 import ImgCrop from "antd-img-crop";
 import axios from "axios";
-import React, { useState } from "react";
 import ModalPopup from "../ModalPopup/ModalPopup";
-// import { configConstant } from 'src/constants/configConstant';
-// import defaultConstant from 'src/constants/defaultConstant';
-// import { getTokenUser } from 'src/utils/helper';
-import styles from "./UploadAvatar.module.scss";
-import { getTokenUser } from "@/utils/helper";
 import defaultConstant from "@/constants/defaultConstant";
 
+import styles from "./UploadAvatar.module.scss";
+
 interface IProps {
-  avatar: string;
-  setAvatar(data): void;
-  setAvatarUrl(data): void;
+  imageUrl: string;
+  setImageUrl(data: string): void;
 }
 
-const getBase64 = (img, callback) => {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
-};
-
-const beforeUpload = (file) => {
+const beforeUpload = (file: any) => {
   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
   if (!isJpgOrPng) {
     message.error("You can only upload JPG/PNG file!");
@@ -34,37 +25,21 @@ const beforeUpload = (file) => {
   return isJpgOrPng && isLt2M;
 };
 
-const UploadAvatar = ({
-  avatar,
-  setAvatar,
-  setAvatarUrl,
-}: IProps): JSX.Element => {
+const UploadAvatar = ({ imageUrl, setImageUrl }: IProps): JSX.Element => {
   const [previewModal, setPreviewModal] = useState(false);
 
   const props = {
     name: "file",
     multiple: true,
-    headers: {
-      "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${getTokenUser()}`,
-    },
-    onRemove: (file) => {
-      // getAvatar('')
-    },
     customRequest: async (options: any) => {
       const fmData = new FormData();
 
       fmData.append("file", options.file);
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${getTokenUser()}`,
-        },
-      };
+
       try {
-        const result = await axios.post(options.action, fmData, config);
+        const result = await axios.post(options.action, fmData);
         options.onSuccess(null, options.file);
-        setAvatarUrl(result.data.linkUrl);
+        setImageUrl(result.data.url);
       } catch (error) {
         options.onError();
         message.error("Có lỗi xảy ra trong quá trình upload ảnh");
@@ -72,17 +47,15 @@ const UploadAvatar = ({
     },
   };
 
-  const onChange = (info) => {
+  const onChange = (info: any) => {
     if (info.file.status === "uploading") {
       return;
     }
-    if (info.file.status === "done") {
-      getBase64(info.file.originFileObj, (imgUrl) => setAvatar(imgUrl));
-    }
+
     setPreviewModal(false);
   };
 
-  const onPreview = async (file) => {
+  const onPreview = async (file: any) => {
     let src = file.url;
     if (!src) {
       src = await new Promise((resolve) => {
@@ -99,16 +72,11 @@ const UploadAvatar = ({
     }
   };
 
-  const handleDomainPostImg = () => {
-    // if (process.env.NEXT_PUBLIC_WEB_ENV === configConstant.environment.development) return configConstant.domainStagingEnv
-    // return process.env.NEXT_PUBLIC_API_URL
-  };
-
   return (
     <div className={styles.avatar}>
       <div onClick={() => setPreviewModal(true)} className={styles.image}>
         <img
-          src={avatar || defaultConstant.defaultAvatarUser}
+          src={imageUrl || defaultConstant.defaultAvatarUser}
           alt=""
           style={{ width: "100%" }}
         />
@@ -122,14 +90,14 @@ const UploadAvatar = ({
         isCancelBtn={false}
         closeBtn>
         <div className={styles.modal_avatar}>
-          <img src={avatar} alt="" />
+          <img src={imageUrl} alt="" />
           <ImgCrop>
             <Upload
               {...props}
               name="avatar"
               listType="text"
               showUploadList={false}
-              action={`${handleDomainPostImg()}/upload/v1.0/upload`}
+              action="http://127.0.0.1:5000/upload"
               beforeUpload={beforeUpload}
               onChange={onChange}
               onPreview={onPreview}
