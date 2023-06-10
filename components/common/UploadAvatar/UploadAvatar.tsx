@@ -40,6 +40,7 @@ const UploadAvatar = ({ imageUrl, setImageUrl }: IProps): JSX.Element => {
         const result = await axios.post(options.action, fmData);
         options.onSuccess(null, options.file);
         setImageUrl(result.data.url);
+        message.success("Ảnh đã được upload thành công");
       } catch (error) {
         options.onError();
         message.error("Có lỗi xảy ra trong quá trình upload ảnh");

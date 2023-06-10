@@ -1,16 +1,27 @@
-import { FC, memo, useState } from "react";
+import { FC, memo, useCallback, useEffect, useState } from "react";
 
 import styles from "./style.module.scss";
 import MainLayout from "@/components/layouts/MainLayout";
 import TourSidebar from "@/modules/Services/Tours/TourSidebar";
 import { CiGrid2H, CiGrid41 } from "react-icons/ci";
-import { Mock_Data_Tours } from "@/public/assets/mockData/tour";
 import TourCard from "@/components/common/TourCard";
+import { ITour } from "@/types/services/tour";
+import { getAllTourApi } from "@/api/services/tour";
 
 type Props = {};
 
 const Tours: FC<Props> = ({}) => {
-  const [tours] = useState(Mock_Data_Tours);
+  const [tours, setTours] = useState<ITour[]>([]);
+  const getData = useCallback(async () => {
+    try {
+      const response = await getAllTourApi();
+      setTours(response.data.data);
+    } catch (error) {}
+  }, []);
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <MainLayout center>

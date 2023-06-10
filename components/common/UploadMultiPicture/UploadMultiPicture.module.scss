@@ -1,12 +1,13 @@
 .picture {
   display: flex;
   .image {
-    height: 10rem;
+    height: 6.8rem;
     width: 8.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
     border: 1px dashed var(--border-color);
+    cursor: pointer;
   }
 }
 .modal_avatar {
@@ -16,7 +17,7 @@
     display: flex;
     justify-content: center;
   }
-  
+
   img {
     width: 60%;
   }

@@ -1,32 +1,31 @@
-import { IDestination } from "./destination";
+import { Address, User } from "../common";
 
 export type ITour = {
-    id: string;
-    name: string;
-    bannerUrl: string;
-    imageUrls: string[];
-    description?: string;
-    quantity: number;
-    price: number;
-    discount: number;
-    favoriteNumber: number;
-    rating?: number;
-    destinationId: string;
-    departure: string;
-    dayTime: number;
-    supplierId: string;
-    startTime: number;
-    concentrationTime: number;
-    convetratePlace?: string;
-    vehicle: string;
-    sightseeing: string;
-    cuisine: string;
-    hotelId: string;
-    suitablePerson: string;
-    highlight: string;
-    schedule: {
-        title: string;
-        content: string;
-    }[];
-    tourGuideId: string;
-}
+  id?: string;
+  title: string;
+  slug?: string;
+  createdBy?: User;
+  imageUrl: string[];
+  about: string;
+  fromDate: number;
+  startTime: number;
+  beforeStartTime: number;
+  gatheringPlace: Address[];
+  numOfDays: number;
+  maxSlot: number;
+  used?: number;
+  vehicle: string[];
+  sightseeing: string[];
+  price: number;
+  discount: number;
+  schedule: {
+    label: string;
+    content: string;
+  }[];
+  tourGuide: string;
+  fromDestination: number;
+  toDestination: string;
+  introduction: string;
+  introLink: string;
+  rate?: number;
+};

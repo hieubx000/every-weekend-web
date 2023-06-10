@@ -2,7 +2,8 @@ import { provinceList } from "@/public/assets/data/intData";
 import { Role } from "@/types/commonTypes";
 import moment from "moment";
 import { dateFormat } from "./patterns";
-import { blogCategory, statusList } from "./initData";
+import { blogCategory, statusList, vehicleList } from "./initData";
+import { SelectProps } from "antd";
 
 export const convertRoleEnumToName = (role?: Role) => {
   switch (role) {
@@ -82,6 +83,14 @@ export const convertEnumStatusToColorTag = (number: number) => {
     default:
       return "processing";
   }
+};
+
+export const convertEnumToVehicle = (number: string) => {
+  const res = vehicleList.find((item: SelectProps) => {
+    return item.value === number;
+  });
+
+  return res?.label
 };
 
 export const convertEnumToCategory = (number: number) => {

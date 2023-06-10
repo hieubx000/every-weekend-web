@@ -25,12 +25,11 @@ interface ErrorResponseApi {
   message: string;
 }
 
-// export enum Role {
-//   guest = 0,
-//   customer = "customer",
-//   supplier = "supplier",
-//   admin = "admin",
-// }
+export type Address = {
+  address: string;
+  latitude: number;
+  longitude: number;
+};
 
 export type User = {
   id: string;
