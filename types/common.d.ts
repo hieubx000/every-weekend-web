@@ -47,3 +47,6 @@ export type User = {
 export interface Blog extends Blog.BlogDataPayload {
   id: string;
 }
+export interface Destination extends Destination.DestinationDataPayload {
+  id: string;
+}

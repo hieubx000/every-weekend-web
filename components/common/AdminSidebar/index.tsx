@@ -1,6 +1,6 @@
 import { FC, memo, useState, useEffect } from "react";
-import { RiCustomerServiceLine } from "react-icons/ri";
 import { MdOutlineTour, MdOutlineHotel } from "react-icons/md";
+import { GrMapLocation } from "react-icons/gr";
 import { Menu, MenuProps } from "antd";
 
 import styles from "./style.module.scss";
@@ -28,6 +28,7 @@ function getItem(
 const items: MenuItem[] = [
   getItem("Quản lý tài khoản", "/admin/accounts", <MdOutlineTour />),
   getItem("Quản lý bài đăng", "/admin/blogs", <TbBrandBlogger />),
+  getItem("Quản lý điểm đến", "/admin/destinations", <GrMapLocation />),
 ];
 
 const AdminSidebar: FC<Props> = ({}) => {
