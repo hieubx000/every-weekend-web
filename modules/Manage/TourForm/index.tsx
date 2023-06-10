@@ -1,4 +1,4 @@
-import { FC, memo } from "react";
+import { FC, memo, useCallback, useEffect, useState } from "react";
 
 import {
   Col,
@@ -12,6 +12,9 @@ import {
   Tag,
   Tooltip,
   Button,
+  message,
+  TimePicker,
+  SelectProps,
 } from "antd";
 import ModalPopup from "@/components/common/ModalPopup/ModalPopup";
 import Map from "@/components/common/Map/Map";
@@ -22,25 +25,43 @@ import {
   MinusCircleOutlined,
 } from "@ant-design/icons";
 import UploadMultiPicture from "@/components/common/UploadMultiPicture/UploadMultiPicture";
-import { getEmbedLinkYoutube, matchYoutubeUrl } from "@/utils/helper";
+import {
+  getEmbedLinkYoutube,
+  handleError,
+  matchYoutubeUrl,
+} from "@/utils/helper";
 import { useManageTourForm } from "@/hooks/manage/useManageTourForm";
 
 import styles from "./style.module.scss";
+import { patchUpdateTourApi, postCreateTourApi } from "@/api/services/tour";
+import { ITour } from "@/types/services/tour";
+import dayjs from "dayjs";
+import moment from "moment";
+import { dateFormat } from "@/utils/patterns";
+import { convertDatePickerToTimestamp } from "@/utils/converts";
+import { useRouter } from "next/router";
+import { vehicleList } from "@/utils/initData";
+import { Destination } from "@/types/common";
+import { getAllDestinationApi } from "@/api/services/destination";
 
-type Props = {};
+type Props = {
+  tourDetail?: ITour;
+};
 
-const TourForm: FC<Props> = ({}) => {
+const TourForm: FC<Props> = ({ tourDetail }) => {
+  const router = useRouter();
   const {
     isAddAddressModal,
     setIsAddAddressModal,
     pictureCertificate,
     setPictureCertificate,
     handleAddPictureCertificate,
-    convetratePlace,
+    gatheringPlace,
+    setGatheringPlace,
     form,
     handlePostAddress,
-    options,
     tags,
+    setTags,
     editInputTagIndex,
     setEditInputTagIndex,
     editInputTagRef,
@@ -58,19 +79,132 @@ const TourForm: FC<Props> = ({}) => {
     renderAddress,
   } = useManageTourForm();
 
+  const [destinations, setDestinations] = useState([]);
+
+  const getDestinationData = useCallback(async () => {
+    try {
+      const response = await getAllDestinationApi();
+      const data: any = [];
+      response.data.data.map((item: any) => {
+        data.push({
+          id: item._id,
+          title: item.title,
+        });
+      });
+      setDestinations(data);
+    } catch (error) {
+      handleError(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    getDestinationData();
+  }, []);
+
+  useEffect(() => {
+    if (tourDetail) {
+      form.setFieldsValue({
+        title: tourDetail.title,
+        slug: tourDetail.slug,
+        fromDate: dayjs(
+          moment.unix(tourDetail.fromDate).format(dateFormat),
+          dateFormat,
+        ),
+        beforeStartTime: dayjs(
+          moment.unix(tourDetail.beforeStartTime).format("HH:mm:ss"),
+          "HH:mm:ss",
+        ),
+        startTime: dayjs(
+          moment.unix(tourDetail.startTime).format("HH:mm:ss"),
+          "HH:mm:ss",
+        ),
+        numOfDays: tourDetail.numOfDays,
+        maxSlot: tourDetail.maxSlot,
+        price: tourDetail.price,
+        discount: tourDetail.discount,
+        vehicle: tourDetail.vehicle,
+        fromDestination: tourDetail.fromDestination,
+        toDestination: tourDetail.toDestination,
+        introduction: tourDetail.introduction,
+        introLink: tourDetail.introLink,
+        schedule: tourDetail.schedule,
+      });
+      setPictureCertificate(tourDetail.imageUrl);
+      setGatheringPlace(tourDetail.gatheringPlace);
+      setTags(tourDetail.sightseeing);
+    }
+  }, [tourDetail, form]);
+
+  const onFinish = useCallback(
+    async (values: any) => {
+      try {
+        tourDetail
+          ? await patchUpdateTourApi(tourDetail.id || "", {
+              title: values.title,
+              imageUrl: pictureCertificate,
+              about: values.about,
+              fromDate: convertDatePickerToTimestamp(values.fromDate),
+              startTime: convertDatePickerToTimestamp(values.startTime),
+              beforeStartTime: convertDatePickerToTimestamp(
+                values.beforeStartTime,
+              ),
+              gatheringPlace: gatheringPlace,
+              numOfDays: values.numOfDays,
+              maxSlot: values.maxSlot,
+              vehicle: values.vehicle,
+              sightseeing: tags,
+              schedule: values.schedule,
+              price: values.price,
+              discount: values.discount,
+              fromDestination: values.fromDestination,
+              toDestination: values.toDestination,
+              introduction: values.introduction,
+              introLink: values.introLink,
+              tourGuide: "",
+            })
+          : await postCreateTourApi({
+              title: values.title,
+              imageUrl: pictureCertificate,
+              about: values.about,
+              fromDate: convertDatePickerToTimestamp(values.fromDate),
+              startTime: convertDatePickerToTimestamp(values.startTime),
+              beforeStartTime: convertDatePickerToTimestamp(
+                values.beforeStartTime,
+              ),
+              gatheringPlace: gatheringPlace,
+              numOfDays: values.numOfDays,
+              maxSlot: values.maxSlot,
+              vehicle: values.vehicle,
+              sightseeing: tags,
+              schedule: values.schedule,
+              price: values.price,
+              discount: values.discount,
+              fromDestination: values.fromDestination,
+              toDestination: values.toDestination,
+              introduction: values.introduction,
+              introLink: values.introLink,
+              tourGuide: "",
+            });
+        router.back();
+        message.success("Đăng tour thành công");
+      } catch (error) {
+        message.error("Đăng tour thất bại");
+      }
+    },
+    [pictureCertificate, gatheringPlace, tags, tourDetail],
+  );
+
   return (
     <div className={styles.container}>
       <Form
         form={form}
-        onFinish={(values) => {
-          console.log("MTS2023", values);
-        }}
+        onFinish={onFinish}
         layout="vertical"
         scrollToFirstError>
         <Row gutter={28}>
           <Col span={16}>
             <Form.Item
-              name="name"
+              name="title"
               label="Tên tour"
               rules={[
                 {
@@ -83,40 +217,8 @@ const TourForm: FC<Props> = ({}) => {
           </Col>
 
           <Col span={8}>
-            <Form.Item name="shortName" label="Tên viết tắt">
-              <Input placeholder="Tên viết tắt" maxLength={200} />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={28}>
-          <Col span={8}>
-            <Form.Item name="phoneNumber" label="Số điện thoại">
-              <InputNumber
-                placeholder="Nhập số điện thoại liên hệ"
-                controls={false}
-                maxLength={200}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item
-              name="email"
-              label="Email"
-              rules={[
-                {
-                  type: "email",
-                  message: "Phải là định dạng email!",
-                },
-              ]}>
-              <Input placeholder="Nhập email liên hệ" maxLength={200} />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item name="website" label="Website">
-              <Input placeholder="Nhập website" maxLength={200} />
+            <Form.Item name="slug" label="Tên viết tắt">
+              <Input disabled placeholder="Tên viết tắt" maxLength={200} />
             </Form.Item>
           </Col>
         </Row>
@@ -124,7 +226,7 @@ const TourForm: FC<Props> = ({}) => {
         <Row gutter={28}>
           <Col span={8}>
             <Form.Item
-              name="startTime"
+              name="fromDate"
               label="Ngày bắt đầu"
               rules={[
                 {
@@ -132,13 +234,13 @@ const TourForm: FC<Props> = ({}) => {
                   message: "Ngày bắt đầu không được để trống!",
                 },
               ]}>
-              <DatePicker placeholder="Chọn ngày" />
+              <DatePicker format={dateFormat} placeholder="Chọn ngày" />
             </Form.Item>
           </Col>
 
           <Col span={8}>
             <Form.Item
-              name="dayTime"
+              name="numOfDays"
               label="Số ngày"
               rules={[
                 {
@@ -152,7 +254,7 @@ const TourForm: FC<Props> = ({}) => {
 
           <Col span={8}>
             <Form.Item
-              name="scale"
+              name="maxSlot"
               label="Số lượng"
               rules={[
                 {
@@ -205,8 +307,7 @@ const TourForm: FC<Props> = ({}) => {
                 mode="multiple"
                 allowClear
                 placeholder="Chọn phương tiện di chuyển"
-                onChange={() => {}}
-                options={options}
+                options={vehicleList}
               />
             </Form.Item>
           </Col>
@@ -287,7 +388,7 @@ const TourForm: FC<Props> = ({}) => {
         <Row gutter={28}>
           <Col span={16}>
             <Form.Item
-              name="destination"
+              name="toDestination"
               label="Địa điểm du lịch"
               rules={
                 [
@@ -297,13 +398,19 @@ const TourForm: FC<Props> = ({}) => {
                   // },
                 ]
               }>
-              <Select placeholder="Địa điểm du lịch"></Select>
+              <Select placeholder="Địa điểm du lịch">
+                {destinations.map((item: any) => (
+                  <Select.Option key={item.id} value={item.id}>
+                    {item.title}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
           </Col>
 
           <Col span={8}>
             <Form.Item
-              name="departure"
+              name="fromDestination"
               label="Nơi khởi hành"
               rules={[
                 {
@@ -322,19 +429,50 @@ const TourForm: FC<Props> = ({}) => {
           </Col>
         </Row>
 
+        <Row gutter={28}>
+          <Col span={8}>
+            <Form.Item
+              name="beforeStartTime"
+              label="Thời gian tập trung"
+              rules={[
+                {
+                  required: true,
+                  message: "Thời gian tập trung không được để trống!",
+                },
+              ]}>
+              <TimePicker placeholder="Chọn giờ" />
+            </Form.Item>
+          </Col>
+
+          <Col span={8}>
+            <Form.Item
+              name="startTime"
+              label="Thời gian di chuyển"
+              rules={[
+                {
+                  required: true,
+                  message: "Thời gian di chuyển không được để trống!",
+                },
+              ]}>
+              <TimePicker placeholder="Chọn giờ" />
+            </Form.Item>
+          </Col>
+        </Row>
+
         <Form.Item
-          name="address"
+          name="gatheringPlace"
           label="Địa điểm tập trung"
-          rules={[
-            {
-              required: true,
-              message: "Cần ít nhất 1 địa chỉ tập trung!",
-            },
-          ]}>
+          // rules={[
+          //   {
+          //     required: true,
+          //     message: "Cần ít nhất 1 địa chỉ tập trung!",
+          //   },
+          // ]}
+        >
           {renderAddress}
         </Form.Item>
 
-        {convetratePlace.length < 3 && (
+        {gatheringPlace.length < 3 && (
           <button
             type="button"
             className={styles.address_btn}
@@ -346,10 +484,7 @@ const TourForm: FC<Props> = ({}) => {
         <div className={styles.title}>Hình ảnh giới thiệu</div>
 
         <div className={styles.picture}>
-          {[
-            "https://firebasestorage.googleapis.com/v0/b/every-weekend-web.appspot.com/o/banner_halong.jpg?alt=media&token=ea5d21e9-cc50-4ea6-a4d7-1c0119cd3944&_gl=1*q29o7c*_ga*MjMxNjM4MDE1LjE2ODMwOTkwMDU.*_ga_CW55HF8NVT*MTY4NTgxMDI4NC42LjEuMTY4NTgxMDMwNy4wLjAuMA..",
-            "https://firebasestorage.googleapis.com/v0/b/every-weekend-web.appspot.com/o/banner_halong.jpg?alt=media&token=ea5d21e9-cc50-4ea6-a4d7-1c0119cd3944&_gl=1*q29o7c*_ga*MjMxNjM4MDE1LjE2ODMwOTkwMDU.*_ga_CW55HF8NVT*MTY4NTgxMDI4NC42LjEuMTY4NTgxMDMwNy4wLjAuMA..",
-          ].map((picture, idx) => (
+          {pictureCertificate.map((picture, idx) => (
             <div key={idx} className={styles.pic}>
               <img alt="" src={picture} />
               <div
@@ -428,7 +563,7 @@ const TourForm: FC<Props> = ({}) => {
         </Row>
 
         <div className={styles.title}>Lịch trình chuyến đi</div>
-        <Form.List name="sights">
+        <Form.List name="schedule">
           {(fields, { add, remove }) => (
             <>
               {fields.map((field, index) => (
@@ -476,9 +611,9 @@ const TourForm: FC<Props> = ({}) => {
         </Form.List>
 
         <div className={styles.btnSubmit}>
-          <Button>Trở lại</Button>
+          <Button onClick={() => router.back()}>Trở lại</Button>
           <Button type="primary" htmlType="submit">
-            Tạo mới
+            {tourDetail ? "Cập nhật" : "Tạo mới"}
           </Button>
         </div>
       </Form>

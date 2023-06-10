@@ -1,17 +1,21 @@
-import { FC, memo, useCallback, useState } from "react";
+import { FC, memo, useCallback, useState, useEffect } from "react";
 
 import styles from "./style.module.scss";
 import MainLayout from "@/components/layouts/MainLayout";
 import { Collapse, Descriptions, Divider, Image, List, Button } from "antd";
-import { Mock_Data_Tours } from "@/public/assets/mockData/tour";
 import { HiOutlineTicket } from "react-icons/hi";
-import { MdOutlineFavoriteBorder, MdOutlineFavorite } from "react-icons/md";
+import { MdOutlineFavoriteBorder } from "react-icons/md";
 import {
+  convertEnumToProvince,
+  convertEnumToVehicle,
   convertTimestampToDate,
-  convertTimestampToDateTime,
   numberFormatter,
 } from "@/utils/converts";
 import { useRouter } from "next/router";
+import { ITour } from "@/types/services/tour";
+import { handleError } from "@/utils/helper";
+import { getTourBySlugApi } from "@/api/services/tour";
+import moment from "moment";
 
 const { Panel } = Collapse;
 
@@ -19,35 +23,61 @@ type Props = {};
 
 const TourDetail: FC<Props> = ({}) => {
   const router = useRouter();
-  const data = Mock_Data_Tours[0];
-  const [imageUrls, setImageUrls] = useState(
-    data.imageUrls.map((item, index) => {
-      if (index < 5) return item;
-    }),
-  );
+  const [tourDetail, setTourDetail] = useState<ITour>();
+
+  const getData = useCallback(async () => {
+    const slug = router.query.slug ? router.query.slug.toString() : "";
+
+    try {
+      const response = await getTourBySlugApi(slug);
+
+      setTourDetail({
+        id: response.data.data._id,
+        title: response.data.data.title,
+        slug: response.data.data.slug,
+        imageUrl: response.data.data.imageUrl,
+        about: response.data.data.about,
+        fromDate: response.data.data.fromDate,
+        startTime: response.data.data.startTime,
+        beforeStartTime: response.data.data.beforeStartTime,
+        gatheringPlace: response.data.data.gatheringPlace,
+        numOfDays: response.data.data.numOfDays,
+        maxSlot: response.data.data.maxSlot,
+        vehicle: response.data.data.vehicle,
+        sightseeing: response.data.data.sightseeing,
+        schedule: response.data.data.schedule,
+        price: response.data.data.price,
+        discount: response.data.data.discount,
+        fromDestination: response.data.data.fromDestination,
+        toDestination: response.data.data.toDestination,
+        introduction: response.data.data.introduction,
+        introLink: response.data.data.introLink,
+        tourGuide: response.data.data.tourGuide,
+      });
+    } catch (error) {
+      handleError(error);
+    }
+  }, [router]);
+
+  useEffect(() => {
+    getData();
+  }, [router]);
 
   const pushToBookingTour = useCallback(() => {
-    router.push(`/services/tours/booking?tourId=${router.query.id}`);
-  }, [router]);
+    router.push(`/services/tours/booking?tourId=${tourDetail?.slug}`);
+  }, [router, tourDetail]);
 
   return (
     <MainLayout>
       <div className={styles.container}>
         <div className={styles.images}>
-          <Image.PreviewGroup
-            preview={{
-              onChange: (current, prev) =>
-                console.log(`current index: ${current}, prev index: ${prev}`),
-            }}>
+          <Image.PreviewGroup preview>
             <div className={styles.images_grid}>
-              {imageUrls.map((item, index) => (
+              {tourDetail?.imageUrl.map((item, index) => (
                 <Image
                   className={styles.images_grid_item}
                   key={index}
                   src={item}
-                  onClick={() => {
-                    // setImageUrls(data.imageUrls)
-                  }}
                 />
               ))}
             </div>
@@ -57,28 +87,35 @@ const TourDetail: FC<Props> = ({}) => {
           <div className={styles.header}>
             <div className={styles.title}>
               <div className={styles.title_ticketCode}>
-                <HiOutlineTicket />
-                {data.id}
+                <HiOutlineTicket size={20} />
+                {tourDetail?.id}
               </div>
-              <div className={styles.title_name}>{data.name}</div>
+              <div className={styles.title_name}>{tourDetail?.title}</div>
               <div className={styles.title_evaluate}>
                 <div className={styles.title_evaluate_rating}>
-                  {data.rating}
+                  {tourDetail?.rate}5
                 </div>
                 <div className={styles.title_evaluate_comment}>Tuyệt vời</div>
                 <div className={styles.title_evaluate_favoriteNumber}>
                   <MdOutlineFavoriteBorder />
-                  {data.favoriteNumber}
+                  132
                 </div>
               </div>
-              <div>Số chỗ còn lại {data.quantity}</div>
+              <div>
+                Số chỗ còn lại &nbsp;
+                {(tourDetail?.maxSlot || 0) - (tourDetail?.used || 0)}
+              </div>
             </div>
             <div className={styles.priceAndBookTour}>
-              <div>{numberFormatter(data.price)}đ</div>
+              <div>{numberFormatter(tourDetail?.price || 0)}đ</div>
               <div className={styles.price}>
                 Giá từ
                 <p>
-                  {numberFormatter((data.price / 100) * (100 - data.discount))}đ
+                  {numberFormatter(
+                    ((tourDetail?.price || 0) / 100) *
+                      (100 - (tourDetail?.discount || 0)),
+                  )}
+                  đ
                 </p>
               </div>
               <Button
@@ -96,7 +133,7 @@ const TourDetail: FC<Props> = ({}) => {
 
           <div className={styles.about}>
             <h2>Thông tin về chuyến đi</h2>
-            <p>{data.description}</p>
+            <p>{tourDetail?.introduction}</p>
           </div>
 
           <Divider />
@@ -104,20 +141,36 @@ const TourDetail: FC<Props> = ({}) => {
           <div className={styles.information}>
             <div className={styles.information_card}>
               <div>
-                Khởi hành <b>{convertTimestampToDateTime(data.startTime)}</b>
+                Khởi hành{" "}
+                <b>
+                  {moment.unix(tourDetail?.startTime || 0).format("HH:mm")} -{" "}
+                  {convertTimestampToDate(tourDetail?.fromDate || 0)}
+                </b>
               </div>
               <div>
                 Thời gian tập trung
-                <b> {convertTimestampToDateTime(data.concentrationTime)}</b>
+                <b>
+                  {" "}
+                  {moment
+                    .unix(tourDetail?.beforeStartTime || 0)
+                    .format("HH:mm")}{" "}
+                  - {convertTimestampToDate(tourDetail?.fromDate || 0)}
+                </b>
               </div>
               <div>
-                Địa điểm tập trung <b>{data.convetratePlace}</b>
+                Địa điểm tập trung:
+                <b>
+                  {tourDetail?.gatheringPlace.map((item, index) => {
+                    return <li key={index}>{item.address}</li>;
+                  })}
+                </b>
               </div>
               <div>
-                Thời gian <b>{data.dayTime} ngày</b>
+                Thời gian <b>{tourDetail?.numOfDays} ngày</b>
               </div>
               <div>
-                Nơi khởi hành <b>{data.departure}</b>
+                Nơi khởi hành{" "}
+                <b>{convertEnumToProvince(tourDetail?.fromDestination || 1)}</b>
               </div>
             </div>
 
@@ -132,8 +185,9 @@ const TourDetail: FC<Props> = ({}) => {
                   <p>Thời gian</p>
                 </div>
                 <div>
-                  {data.dayTime} ngày,
-                  {data.dayTime > 1 && data.dayTime - 1 + "đêm"}
+                  {tourDetail?.numOfDays} ngày,&nbsp;
+                  {(tourDetail?.numOfDays || 0) > 1 &&
+                    (tourDetail?.numOfDays || 0) - 1 + " đêm"}
                 </div>
               </div>
               <div className={styles.information_items_item}>
@@ -145,7 +199,11 @@ const TourDetail: FC<Props> = ({}) => {
                   />
                   <p>Phương tiện di chuyển</p>
                 </div>
-                <div>{data.vehicle}</div>
+                <div>
+                  {tourDetail?.vehicle.map((item) => {
+                    return convertEnumToVehicle(item) + ", ";
+                  })}
+                </div>
               </div>
               <div className={styles.information_items_item}>
                 <div className={styles.information_items_item_header}>
@@ -156,7 +214,11 @@ const TourDetail: FC<Props> = ({}) => {
                   />
                   <p>Điểm tham quan</p>
                 </div>
-                <div>{data.sightseeing}</div>
+                <div>
+                  {tourDetail?.sightseeing.map((item) => {
+                    return item + ", ";
+                  })}
+                </div>
               </div>
               <div className={styles.information_items_item}>
                 <div className={styles.information_items_item_header}>
@@ -167,7 +229,7 @@ const TourDetail: FC<Props> = ({}) => {
                   />
                   <p>Ẩm thực</p>
                 </div>
-                <div>{data.cuisine}</div>
+                <div>mực, cá</div>
               </div>
               <div className={styles.information_items_item}>
                 <div className={styles.information_items_item_header}>
@@ -178,7 +240,7 @@ const TourDetail: FC<Props> = ({}) => {
                   />
                   <p>Khách sạn</p>
                 </div>
-                <div>{data.hotelId}</div>
+                <div>5 sao</div>
               </div>
               <div className={styles.information_items_item}>
                 <div className={styles.information_items_item_header}>
@@ -189,7 +251,7 @@ const TourDetail: FC<Props> = ({}) => {
                   />
                   <p>Đối tượng thích hợp</p>
                 </div>
-                <div>{data.suitablePerson}</div>
+                <div>Tất cả mọi người</div>
               </div>
             </div>
           </div>
@@ -200,8 +262,8 @@ const TourDetail: FC<Props> = ({}) => {
             <h2>Lịch trình</h2>
             <div>
               <Collapse defaultActiveKey={0} size="large">
-                {data.schedule.map((item, index) => (
-                  <Panel header={`Ngày ${index + 1} ${item.title}`} key={index}>
+                {tourDetail?.schedule.map((item, index) => (
+                  <Panel header={`Ngày ${index + 1} ${item.label}`} key={index}>
                     <p>{item.content}</p>
                   </Panel>
                 ))}

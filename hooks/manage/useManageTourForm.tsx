@@ -2,11 +2,12 @@ import { useState, useEffect, useRef } from "react";
 
 import { Form, InputRef, SelectProps, theme } from "antd";
 import { DeleteTwoTone } from "@ant-design/icons";
+import { Address } from "@/types/common";
 
 const useManageTourForm = () => {
   const [isAddAddressModal, setIsAddAddressModal] = useState(false);
   const [pictureCertificate, setPictureCertificate] = useState<string[]>([]);
-  const [convetratePlace, setConvetratePlace] = useState<any>([]);
+  const [gatheringPlace, setGatheringPlace] = useState<Address[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -16,24 +17,16 @@ const useManageTourForm = () => {
   const editInputTagRef = useRef<InputRef>(null);
   const [form] = Form.useForm();
 
-  const options: SelectProps["options"] = [
-    { label: "Máy bay", value: "may_bay" },
-    { label: "Tàu hỏa", value: "tau_hoa" },
-    { label: "Xe khách", value: "xe_khach" },
-  ];
-
   const handleAddPictureCertificate = (imgUrl: string) => {
     setPictureCertificate([...pictureCertificate, imgUrl]);
   };
 
   const handlePostAddress = async (data: any) => {
-    form.setFieldsValue({ address: [...convetratePlace, data] });
-    setConvetratePlace([...convetratePlace, data]);
-
-    console.log(convetratePlace);
+    form.setFieldsValue({ address: [...gatheringPlace, data] });
+    setGatheringPlace([...gatheringPlace, data]);
   };
 
-  const renderAddress = convetratePlace.map((address: any, index: number) => (
+  const renderAddress = gatheringPlace.map((address: any, index: number) => (
     <div key={index}>
       <span>
         {index + 1}. {address.address}
@@ -41,12 +34,12 @@ const useManageTourForm = () => {
       <DeleteTwoTone
         onClick={() => {
           form.setFieldsValue({
-            address: convetratePlace.filter(
+            address: gatheringPlace.filter(
               (item: any) => item.address !== address.address,
             ),
           });
-          setConvetratePlace(
-            convetratePlace.filter(
+          setGatheringPlace(
+            gatheringPlace.filter(
               (item: any) => item.address !== address.address,
             ),
           );
@@ -105,12 +98,12 @@ const useManageTourForm = () => {
     pictureCertificate,
     setPictureCertificate,
     handleAddPictureCertificate,
-    convetratePlace,
-    setConvetratePlace,
+    gatheringPlace,
+    setGatheringPlace,
     handlePostAddress,
     form,
-    options,
     tags,
+    setTags,
     editInputTagIndex,
     setEditInputTagIndex,
     editInputTagRef,

@@ -2,7 +2,11 @@ import { FC, memo } from "react";
 
 import styles from "./style.module.scss";
 import { ITour } from "@/types/services/tour";
-import { convertTimestampToDate, numberFormatter } from "@/utils/converts";
+import {
+  convertEnumToProvince,
+  convertTimestampToDate,
+  numberFormatter,
+} from "@/utils/converts";
 import Link from "next/link";
 import { routerPathConstant } from "@/constants/routerConstant";
 import Button from "@/components/common/Button";
@@ -12,17 +16,23 @@ type Props = {
 
 const TourCard: FC<Props> = ({ data }) => {
   return (
-    <Link className={styles.container} href={routerPathConstant.tours + "/" + data.id}>
-        <img src={data.bannerUrl} alt="" />
-        <div className={styles.content}>
+    <Link
+      className={styles.container}
+      href={routerPathConstant.tours + "/" + data.slug}>
+      <img src={data.imageUrl?.[0]} alt="" />
+      <div className={styles.content}>
+        <div>
           <div className={styles.content_date}>
-            {convertTimestampToDate(data.startTime)} - {data.dayTime} ngày
+            {convertTimestampToDate(data.startTime)} - {data.numOfDays} ngày
           </div>
-          <div className={styles.content_name}>{data.name}</div>
-          <div>Mã tour: {data.id}</div>
-          <div>Nơi khởi hành: {data.departure}</div>
+          <div className={styles.content_name}>{data.title}</div>
+        </div>
+        <div>
+          <div>
+            Nơi khởi hành: <b>{convertEnumToProvince(data.fromDestination)}</b>
+          </div>
           <div className={styles.content_price}>
-            Giá <p>{numberFormatter(data.price)}đ</p>
+            Giá: <b>{numberFormatter(data.price)}đ</b>
           </div>
           <div className={styles.content_priceNow}>
             <span>
@@ -30,11 +40,14 @@ const TourCard: FC<Props> = ({ data }) => {
             </span>
             <div className={styles.content_discount}>{data.discount}% giảm</div>
           </div>
-          <div>Số chỗ còn {data.quantity}</div>
-          <Button style={{margin: "12px 0"}} variant="full-width">
+          <div>
+            Số chỗ còn: <b>{data.maxSlot - (data.used || 0)}</b>
+          </div>
+          <Button style={{ margin: "12px 0" }} variant="full-width">
             Đặt ngay
           </Button>
         </div>
+      </div>
     </Link>
   );
 };

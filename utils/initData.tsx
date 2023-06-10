@@ -1,3 +1,4 @@
+import { SelectProps } from "antd";
 import { MdOutlineAirportShuttle, MdSportsGymnastics } from "react-icons/md";
 
 const hotelFacilities = [
@@ -47,6 +48,12 @@ export const statusList = [
     id: 3,
     name: "Bị ẩn",
   },
+];
+
+export const vehicleList = [
+  { label: "Máy bay", value: "may_bay" },
+  { label: "Tàu hỏa", value: "tau_hoa" },
+  { label: "Xe khách", value: "xe_khach" },
 ];
 
 export default { hotelFacilities };
