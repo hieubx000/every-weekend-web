@@ -5,6 +5,7 @@
 //   }
 
 import { authStorage } from "@/storage/authStorage";
+import { Role } from "@/types/commonTypes";
 import { message } from "antd";
 
 // export const handleError = (error, options: IHandleError = {}): void => {
@@ -72,8 +73,19 @@ export const getEmbedLinkYoutube = (youtubeLink: string) => {
 };
 
 export const handleError = (error: any) => {
-  if (typeof error === "string") {
-    message.error(error);
-    return;
+  message.error("Đã có lỗi xảy ra, vui lòng thử lại sau!");
+};
+
+export const homepagePathByRole = (role?: Role) => {
+  switch (role) {
+    case Role.customer:
+      return "/";
+    case Role.supplier:
+      return "/manage/tours";
+    case Role.customer:
+      return "/admin/accounts";
+
+    default:
+      return "/";
   }
 };

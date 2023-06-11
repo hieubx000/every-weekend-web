@@ -392,10 +392,10 @@ const TourForm: FC<Props> = ({ tourDetail }) => {
               label="Địa điểm du lịch"
               rules={
                 [
-                  // {
-                  //   required: true,
-                  //   message: "Địa điểm du lịch không được để trống!",
-                  // },
+                  {
+                    required: true,
+                    message: "Địa điểm du lịch không được để trống!",
+                  },
                 ]
               }>
               <Select placeholder="Địa điểm du lịch">

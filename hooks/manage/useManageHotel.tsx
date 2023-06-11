@@ -2,62 +2,72 @@ import { useRouter } from "next/router";
 import { FC, useCallback, useEffect, useState } from "react";
 
 import { MdDeleteOutline, MdOutlineModeEdit } from "react-icons/md";
-import { Space, Tag } from "antd";
+import { Space, Tag, message } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { IBreadcrumb } from "@/components/common/CustomBreadcrumb";
+import { deleteTourApi, getAllTourApi } from "@/api/services/tour";
+import ActionConfirm from "@/components/common/ActionConfirm";
+import {
+  convertEnumToProvince,
+  convertTimestampToDate,
+} from "@/utils/converts";
+import { Address, Destination, User } from "@/types/common";
+import useUserProfile from "../useUserProfile";
+import { handleError } from "@/utils/helper";
+import { getAllHotelApi } from "@/api/services/hotel";
 
 interface DataType {
   key: string;
-  name: string;
-  age: number;
-  address: string;
-  tags: string[];
+  id: string;
+  title: string;
+  toDestination: Destination;
+  imageUrl: string[];
+  address: Address[];
 }
 
 const useManageHotel = () => {
   const router = useRouter();
+  const [tableData, setTableData] = useState<DataType[]>([]);
+  const { userProfile } = useUserProfile();
+
+  const handleDeleteTour = useCallback(async (id: string) => {
+    try {
+      await deleteTourApi(id);
+      getData();
+      message.success("Xóa tour thành công");
+    } catch (error) {
+      message.error("Xóa tour thất bại");
+    }
+  }, []);
 
   const tableColumns: ColumnsType<DataType> = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-      render: (text) => <a>{text}</a>,
-      sorter: (a, b) => a.name.length - b.name.length,
+      title: "Tên khách sạn",
+      dataIndex: "title",
+      key: "title",
+      render: (text) => <p>{text}</p>,
       ellipsis: true,
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
-      sorter: (a, b) => a.age - b.age,
+      title: "Ảnh",
+      dataIndex: "imageUrl",
+      key: "imageUrl",
+      render: (urls) => <img width={100} src={urls[0]} alt="" />,
+      ellipsis: true,
     },
     {
-      title: "Address",
+      title: "Vị trí",
+      dataIndex: "toDestination",
+      key: "toDestination",
+      render: (text: Destination) => <p>{text.title}</p>,
+      ellipsis: true,
+    },
+    {
+      title: "Địa chỉ",
       dataIndex: "address",
       key: "address",
-      sorter: (a, b) => a.address.length - b.address.length,
+      render: (text: Address[]) => <p>{text[0].address}</p>,
       ellipsis: true,
-    },
-    {
-      title: "Tags",
-      key: "tags",
-      dataIndex: "tags",
-      render: (_, { tags }) => (
-        <>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? "geekblue" : "green";
-            if (tag === "loser") {
-              color = "volcano";
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
     },
     {
       title: "Action",
@@ -65,40 +75,47 @@ const useManageHotel = () => {
       render: (_, record) => (
         <Space size="middle">
           <MdOutlineModeEdit
+            className="hover"
             onClick={() => {
-              router.push(`/manage/tours/${record.key}`);
+              router.push(`${router.pathname}/${record.id}`);
             }}
             size={20}
           />
-          <MdDeleteOutline size={20} />
+          <ActionConfirm
+            title="Xóa tour"
+            description="Bạn chắc chắn muốn xóa tour này?"
+            handleConfirm={handleDeleteTour.bind(this, record.id)}>
+            <MdDeleteOutline size={20} className="hover" />
+          </ActionConfirm>
         </Space>
       ),
     },
   ];
 
-  const tableData: DataType[] = [
-    {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-      tags: ["nice", "developer"],
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-      tags: ["loser"],
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sydney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-  ];
+  const getData = useCallback(async () => {
+    try {
+      const response = await getAllHotelApi({ createdBy: userProfile?.id });
+
+      const data: DataType[] = [];
+      response.data.data.map((item: any) => {
+        data.push({
+          key: item._id,
+          id: item._id,
+          title: item.title,
+          address: item.address,
+          imageUrl: item.imageUrl,
+          toDestination: item.toDestination,
+        });
+      });
+      setTableData(data);
+    } catch (error) {
+      handleError(error);
+    }
+  }, [userProfile]);
+
+  useEffect(() => {
+    getData();
+  }, [userProfile]);
 
   const pushToCreateHotel = useCallback(() => {
     router.push("/manage/hotels/new");

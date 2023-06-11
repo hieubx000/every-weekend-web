@@ -16,17 +16,17 @@ type Props = {
 const HotelCard: FC<Props> = ({ data }) => {
   const router = useRouter();
   return (
-    <Link href={`/services/hotels/${data.id}`}>
+    <Link href={`/services/hotels/${data.slug}`}>
       <div className={styles.container}>
-        <img src={data.imageUrls[0]} alt="" />
+        <img src={data.imageUrl[0]} alt="" />
         <div className={styles.content}>
-          <div className={styles.content_title}>{data.name}</div>
+          <div className={styles.content_title}>{data.title}</div>
           <div className={styles.content_rating}>
             <Rate disabled defaultValue={data.rating ?? 0} />
           </div>
           <div className={styles.content_address}>
             <HiOutlineLocationMarker size={24} />
-            <p>{data.address}</p>
+            <p>{data.address[0].address}</p>
           </div>
           <div className={styles.content_booking}>
             <div className={styles.content_booking_price}>

@@ -10,6 +10,7 @@ import useHeader from "@/hooks/Layout/useHeader";
 import { Role } from "@/types/commonTypes";
 import { convertRoleEnumToName } from "@/utils/converts";
 import { authStorage } from "@/storage/authStorage";
+import { homepagePathByRole } from "@/utils/helper";
 
 type Props = {};
 
@@ -201,7 +202,9 @@ const MainHeader: FC<Props> = () => {
               closable={false}
               onClose={() => setLeftDrawer(false)}>
               <div className={styles.logo}>
-                <LinkTo href="/" onClick={() => setLeftDrawer(false)}>
+                <LinkTo
+                  href={homepagePathByRole(userRole)}
+                  onClick={() => setLeftDrawer(false)}>
                   <img src="/assets/icons/header/logo.svg" alt="" />
                 </LinkTo>
               </div>
@@ -219,7 +222,7 @@ const MainHeader: FC<Props> = () => {
           </div>
 
           <div className={styles.header_logo}>
-            <LinkTo href="/">
+            <LinkTo href={homepagePathByRole(userRole)}>
               <img src="/assets/images/logo.png" alt="" title="" />
             </LinkTo>
           </div>

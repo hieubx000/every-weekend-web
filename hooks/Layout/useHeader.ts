@@ -78,7 +78,7 @@ const useHeader = () => {
       profile: userProfile,
     });
     router.push("/");
-  }, [ userToken, userProfile]);
+  }, [userToken, userProfile]);
 
   const onChangeRoleToSupplier = useCallback(() => {
     authStorage.setUserProfile({
@@ -87,13 +87,13 @@ const useHeader = () => {
       profile: userProfile,
     });
     router.push("/manage/tours");
-  }, [ userToken, userProfile]);
+  }, [userToken, userProfile]);
 
   const onClickItemDrawer = useCallback((url: string) => {
     setDropdown(false);
     router.push(url);
   }, []);
-  
+
   const onClickItemHeader = useCallback((url: string) => {
     router.push(url);
   }, []);
@@ -139,17 +139,17 @@ const useHeader = () => {
               id: routerPathConstant.homepage,
               src: "/assets/icons/header/blog.svg",
               title: "Quản lý Blog",
-              link: routerPathConstant.homepage,
+              link: routerPathConstant.myBlog,
             },
           ],
           [
-            {
-              id: routerPathConstant.homepage,
-              src: "/assets/icons/header/supplier.svg",
-              title: "Chế độ nhà cung cấp",
-              link: routerPathConstant.homepage,
-              onClickItem: onChangeRoleToSupplier,
-            },
+            // {
+            //   id: routerPathConstant.homepage,
+            //   src: "/assets/icons/header/supplier.svg",
+            //   title: "Chế độ nhà cung cấp",
+            //   link: routerPathConstant.homepage,
+            //   onClickItem: onChangeRoleToSupplier,
+            // },
             {
               id: "",
               src: "/assets/icons/header/change_password.svg",
@@ -167,13 +167,13 @@ const useHeader = () => {
         ]
       : [
           [
-            {
-              id: routerPathConstant.homepage,
-              src: "/assets/icons/header/supplier.svg",
-              title: "Chế độ khách hàng",
-              link: routerPathConstant.homepage,
-              onClickItem: onChangeRoleToCustomer,
-            },
+            // {
+            //   id: routerPathConstant.homepage,
+            //   src: "/assets/icons/header/supplier.svg",
+            //   title: "Chế độ khách hàng",
+            //   link: routerPathConstant.homepage,
+            //   onClickItem: onChangeRoleToCustomer,
+            // },
             {
               id: "",
               src: "/assets/icons/header/change_password.svg",

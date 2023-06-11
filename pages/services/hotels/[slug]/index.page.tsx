@@ -1,4 +1,4 @@
-import { FC, memo, useState, useCallback } from "react";
+import { FC, memo, useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 
 import { Mock_Data_Hotels } from "@/public/assets/mockData/hotels";
@@ -18,14 +18,15 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { TbArrowAutofitHeight } from "react-icons/tb";
 import { BiBed, BiWifi2 } from "react-icons/bi";
 import { GrUser } from "react-icons/gr";
-import ModalPopup from "@/components/common/ModalPopup/ModalPopup";
 import MainLayout from "@/components/layouts/MainLayout";
 import { convertFacilitiesFromEnum } from "@/utils/facilities";
 import { numberFormatter } from "@/utils/converts";
-import { Room } from "@/types/services/hotels";
+import { IHotel, Room } from "@/types/services/hotels";
 
 import styles from "./style.module.scss";
 import SuccessModal from "@/components/common/Modal/SuccessModal";
+import { handleError } from "@/utils/helper";
+import { getHotelBySlugApi } from "@/api/services/hotel";
 
 const { RangePicker } = DatePicker;
 
@@ -34,13 +35,38 @@ type Props = {};
 const HotelDetail: FC<Props> = ({}) => {
   const router = useRouter();
   const [visible, setVisible] = useState(false);
-  const data = Mock_Data_Hotels[0];
   const [order, setOrder] = useState<Room>();
-  const [imageUrls, setImageUrls] = useState(
-    data.imageUrls.map((item, index) => {
-      if (index < 5) return item;
-    }),
-  );
+
+  const [hotelDetail, setHotelDetail] = useState<IHotel>();
+
+  const getData = useCallback(async () => {
+    const slug = router.query.slug ? router.query.slug.toString() : undefined;
+
+    if (slug) {
+      try {
+        const response = await getHotelBySlugApi(slug);
+
+        setHotelDetail({
+          id: response.data.data._id,
+          title: response.data.data.title,
+          slug: response.data.data.slug,
+          imageUrl: response.data.data.imageUrl,
+          address: response.data.data.address,
+          hotelService: response.data.data.hotelService,
+          introduction: response.data.data.introduction,
+          introLink: response.data.data.introLink,
+          toDestination: response.data.data.toDestination,
+          availability: response.data.data.availability,
+        });
+      } catch (error) {
+        handleError(error);
+      }
+    }
+  }, [router]);
+
+  useEffect(() => {
+    getData();
+  }, [router]);
 
   const onFinish = useCallback(
     (e: any) => {
@@ -63,7 +89,7 @@ const HotelDetail: FC<Props> = ({}) => {
                 console.log(`current index: ${current}, prev index: ${prev}`),
             }}>
             <div className={styles.images_grid}>
-              {imageUrls.map((item, index) => (
+              {hotelDetail?.imageUrl.map((item, index) => (
                 <Image
                   className={styles.images_grid_item}
                   key={index}
@@ -82,24 +108,28 @@ const HotelDetail: FC<Props> = ({}) => {
             <Rate
               className={styles.content_left_rating}
               disabled
-              defaultValue={data.rating ?? 0}
+              defaultValue={5}
             />
-            <div className={styles.content_left_title}>{data.name}</div>
+            <div className={styles.content_left_title}>
+              {hotelDetail?.title}
+            </div>
             <div className={styles.content_left_address}>
               <HiOutlineLocationMarker />
-              {data.address}
+              {hotelDetail?.address[0].address}
             </div>
             <Divider />
             <div>
               <h2>Giới thiệu về khách sạn</h2>
-              <div>{data.about}</div>
+              <div>{hotelDetail?.introduction}</div>
             </div>
             <Divider />
             <div>
               <h2>Danh sách tiện nghi</h2>
               <div className={styles.content_left_facilities}>
-                {data.facilities.map((item) => (
-                  <div className={styles.content_left_facilities_item}>
+                {hotelDetail?.hotelService.map((item, index) => (
+                  <div
+                    className={styles.content_left_facilities_item}
+                    key={index}>
                     {convertFacilitiesFromEnum(item)?.icon}
                     <div>{convertFacilitiesFromEnum(item)?.title}</div>
                   </div>
@@ -109,8 +139,18 @@ const HotelDetail: FC<Props> = ({}) => {
             <div>
               <h2>Nội quy</h2>
               <div>
-                {data.rule.checkIn}
-                {data.rule.checkOut}
+                <table>
+                  <tbody>
+                    <tr>
+                      <td width={200}>Check In</td>
+                      <td>12:AM</td>
+                    </tr>
+                    <tr>
+                      <td>Check Out</td>
+                      <td>12:AM</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
 
@@ -119,13 +159,16 @@ const HotelDetail: FC<Props> = ({}) => {
             <div className={styles.content_left_availability}>
               <h2>Danh sách phòng</h2>
               <div className={styles.availabilities}>
-                {data.availability.map((item, index) => (
+                {hotelDetail?.availability.map((item, index) => (
                   <div key={index} className={styles.availability}>
-                    <img src={item.imageUrl} alt="availability" />
+                    <img
+                      src="https://modtel.travelerwp.com/wp-content/uploads/2022/04/Jumeirah-Emirates-Towers-800x600.png"
+                      alt="availability"
+                    />
                     <div className={styles.availability_content}>
                       <div className={styles.availability_content_info}>
                         <div className={styles.availability_content_info_title}>
-                          {item.name}
+                          {item.title}
                         </div>
                         <div className={styles.availability_content_info_items}>
                           <div
@@ -179,25 +222,23 @@ const HotelDetail: FC<Props> = ({}) => {
                               x{item.amount}
                             </div>
                           </div>
-                          {item.wifi && (
+                          <div
+                            className={
+                              styles.availability_content_info_items_item
+                            }>
                             <div
                               className={
-                                styles.availability_content_info_items_item
+                                styles.availability_content_info_items_item_icon
                               }>
-                              <div
-                                className={
-                                  styles.availability_content_info_items_item_icon
-                                }>
-                                <BiWifi2 size={24} />
-                              </div>
-                              <div
-                                className={
-                                  styles.availability_content_info_items_item_title
-                                }>
-                                Wifi
-                              </div>
+                              <BiWifi2 size={24} />
                             </div>
-                          )}
+                            <div
+                              className={
+                                styles.availability_content_info_items_item_title
+                              }>
+                              Wifi
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <div className={styles.availability_content_price}>
@@ -278,7 +319,7 @@ const HotelDetail: FC<Props> = ({}) => {
                 {order && (
                   <div className={styles.content_right_info}>
                     <div>
-                      Loại phòng: <b>{order?.name}</b>
+                      Loại phòng: <b>{order?.title}</b>
                     </div>
                     <div>
                       Đơn giá:{" "}
