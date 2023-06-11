@@ -1,17 +1,14 @@
-import { FC, memo } from "react";
+import { FC, memo, useCallback, useEffect } from "react";
 
 import {
   Col,
-  DatePicker,
   Form,
   Input,
   InputNumber,
   Row,
   Select,
-  Space,
-  Tag,
-  Tooltip,
   Button,
+  message,
 } from "antd";
 import ModalPopup from "@/components/common/ModalPopup/ModalPopup";
 import Map from "@/components/common/Map/Map";
@@ -22,55 +19,100 @@ import {
   MinusCircleOutlined,
 } from "@ant-design/icons";
 import UploadMultiPicture from "@/components/common/UploadMultiPicture/UploadMultiPicture";
-import { getEmbedLinkYoutube, matchYoutubeUrl } from "@/utils/helper";
+import {
+  getEmbedLinkYoutube,
+  handleError,
+  matchYoutubeUrl,
+} from "@/utils/helper";
 import { useManageTourForm } from "@/hooks/manage/useManageTourForm";
 
 import styles from "./style.module.scss";
+import { useManageHotelForm } from "@/hooks/manage/useManageHotelForm";
+import { hotelServiceList } from "@/utils/initData";
+import { patchUpdateHotelApi, postCreateHotelApi } from "@/api/services/hotel";
+import { IHotel } from "@/types/services/hotels";
+import { useRouter } from "next/router";
 
-type Props = {};
+type Props = {
+  hotelDetail?: IHotel;
+};
 
-const HotelForm: FC<Props> = ({}) => {
+const HotelForm: FC<Props> = ({ hotelDetail }) => {
+  const router = useRouter();
   const {
     isAddAddressModal,
     setIsAddAddressModal,
     pictureCertificate,
     setPictureCertificate,
     handleAddPictureCertificate,
-    convetratePlace,
     form,
     handlePostAddress,
-    options,
-    tags,
-    editInputTagIndex,
-    setEditInputTagIndex,
-    editInputTagRef,
-    editInputTagValue,
-    handleClose,
-    handleEditInputChange,
-    handleEditInputConfirm,
-    inputRef,
-    inputVisible,
-    setEditInputTagValue,
-    showInput,
-    handleInputChange,
-    handleInputConfirm,
-    inputValue,
+    gatheringPlace,
     renderAddress,
-  } = useManageTourForm();
+    destinations,
+    setGatheringPlace,
+  } = useManageHotelForm();
+
+  useEffect(() => {
+    if (hotelDetail) {
+      form.setFieldsValue({
+        title: hotelDetail.title,
+        slug: hotelDetail.slug,
+        toDestination: hotelDetail.toDestination,
+        hotelService: hotelDetail.hotelService,
+        introduction: hotelDetail.introduction,
+        introLink: hotelDetail.introLink,
+        availability: hotelDetail.availability,
+      });
+      setPictureCertificate(hotelDetail.imageUrl);
+      setGatheringPlace(hotelDetail.address);
+    }
+  }, [hotelDetail, form]);
+
+  const onFinish = useCallback(
+    async (values: any) => {
+      try {
+        hotelDetail
+          ? await patchUpdateHotelApi(hotelDetail.id || "", {
+              title: values.title,
+              imageUrl: pictureCertificate,
+              toDestination: values.toDestination,
+              address: gatheringPlace,
+              introduction: values.introduction,
+              introLink: values.introLink,
+              hotelService: values.hotelService,
+              availability: values.availability,
+            })
+          : await postCreateHotelApi({
+              title: values.title,
+              imageUrl: pictureCertificate,
+              toDestination: values.toDestination,
+              address: gatheringPlace,
+              introduction: values.introduction,
+              introLink: values.introLink,
+              hotelService: values.hotelService,
+              availability: values.availability,
+            });
+        router.back();
+        message.success("Tạo khách sạn thành công!");
+      } catch (error) {
+        handleError(error);
+      }
+    },
+    [pictureCertificate, gatheringPlace, hotelDetail],
+  );
 
   return (
     <div className={styles.container}>
       <Form
         form={form}
-        onFinish={(values) => {
-          console.log("MTS2023", values);
-        }}
+        onFinish={onFinish}
         layout="vertical"
         scrollToFirstError>
         <Row gutter={28}>
           <Col span={16}>
             <Form.Item
-              name="name"
+              name="title"
               label="Tên Khách sạn"
               rules={[
                 {
@@ -83,40 +125,8 @@ const HotelForm: FC<Props> = ({}) => {
           </Col>
 
           <Col span={8}>
-            <Form.Item name="shortName" label="Tên viết tắt">
-              <Input placeholder="Tên viết tắt" maxLength={200} />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={28}>
-          <Col span={8}>
-            <Form.Item name="phoneNumber" label="Số điện thoại">
-              <InputNumber
-                placeholder="Nhập số điện thoại liên hệ"
-                controls={false}
-                maxLength={200}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item
-              name="email"
-              label="Email"
-              rules={[
-                {
-                  type: "email",
-                  message: "Phải là định dạng email!",
-                },
-              ]}>
-              <Input placeholder="Nhập email liên hệ" maxLength={200} />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item name="website" label="Website">
-              <Input placeholder="Nhập website" maxLength={200} />
+            <Form.Item name="slug" label="Tên viết tắt">
+              <Input disabled placeholder="Tên viết tắt" maxLength={200} />
             </Form.Item>
           </Col>
         </Row>
@@ -124,54 +134,51 @@ const HotelForm: FC<Props> = ({}) => {
         <Row gutter={28}>
           <Col span={16}>
             <Form.Item
-              name="destination"
+              name="toDestination"
               label="Địa điểm du lịch"
-              rules={
-                [
-                  // {
-                  //   required: true,
-                  //   message: "Địa điểm du lịch không được để trống!",
-                  // },
-                ]
-              }>
-              <Select placeholder="Địa điểm du lịch"></Select>
-            </Form.Item>
-          </Col>
-
-          {/* <Col span={8}>
-            <Form.Item
-              name="departure"
-              label="Nơi khởi hành"
               rules={[
                 {
                   required: true,
-                  message: "Nơi khởi hành không được để trống!",
+                  message: "Địa điểm du lịch không được để trống!",
                 },
               ]}>
-              <Select placeholder="Nơi khởi hành">
-                {(provinceList || []).map((province) => (
-                  <Select.Option key={province.id} value={province.id}>
-                    {province.name}
+              <Select placeholder="Địa điểm du lịch">
+                {destinations.map((item: any) => (
+                  <Select.Option key={item.id} value={item.id}>
+                    {item.title}
                   </Select.Option>
                 ))}
               </Select>
             </Form.Item>
-          </Col> */}
+          </Col>
         </Row>
+
+        <Form.Item
+          name="hotelService"
+          label="Danh sách tiện nghi"
+          rules={[
+            {
+              required: true,
+              message: "Danh sách tiện nghi không được để trống!",
+            },
+          ]}>
+          <Select placeholder="Danh sách tiện nghi" mode="multiple" allowClear>
+            {hotelServiceList.map((item: any) => (
+              <Select.Option key={item.value} value={item.value}>
+                {item.title}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
 
         <Form.Item
           name="address"
           label="Vị trí"
-          rules={[
-            {
-              required: true,
-              message: "Vị trí không được để trống!",
-            },
-          ]}>
+          >
           {renderAddress}
         </Form.Item>
 
-        {convetratePlace.length < 1 && (
+        {gatheringPlace.length < 1 && (
           <button
             type="button"
             className={styles.address_btn}
@@ -183,10 +190,7 @@ const HotelForm: FC<Props> = ({}) => {
         <div className={styles.title}>Hình ảnh giới thiệu</div>
 
         <div className={styles.picture}>
-          {[
-            "https://firebasestorage.googleapis.com/v0/b/every-weekend-web.appspot.com/o/banner_halong.jpg?alt=media&token=ea5d21e9-cc50-4ea6-a4d7-1c0119cd3944&_gl=1*q29o7c*_ga*MjMxNjM4MDE1LjE2ODMwOTkwMDU.*_ga_CW55HF8NVT*MTY4NTgxMDI4NC42LjEuMTY4NTgxMDMwNy4wLjAuMA..",
-            "https://firebasestorage.googleapis.com/v0/b/every-weekend-web.appspot.com/o/banner_halong.jpg?alt=media&token=ea5d21e9-cc50-4ea6-a4d7-1c0119cd3944&_gl=1*q29o7c*_ga*MjMxNjM4MDE1LjE2ODMwOTkwMDU.*_ga_CW55HF8NVT*MTY4NTgxMDI4NC42LjEuMTY4NTgxMDMwNy4wLjAuMA..",
-          ].map((picture, idx) => (
+          {pictureCertificate.map((picture, idx) => (
             <div key={idx} className={styles.pic}>
               <img alt="" src={picture} />
               <div
@@ -265,7 +269,7 @@ const HotelForm: FC<Props> = ({}) => {
         </Row>
 
         <div className={styles.title}>Các loại phòng cung cấp</div>
-        <Form.List name="sights">
+        <Form.List name="availability">
           {(fields, { add, remove }) => (
             <>
               {fields.map((field, index) => (
@@ -285,7 +289,7 @@ const HotelForm: FC<Props> = ({}) => {
                           <Form.Item
                             {...field}
                             label={`Tên phòng ${index + 1}`}
-                            name={[field.name, "label"]}>
+                            name={[field.name, "title"]}>
                             <Input />
                           </Form.Item>
                         )}
@@ -366,15 +370,15 @@ const HotelForm: FC<Props> = ({}) => {
                     <Col span={24}>
                       <Form.Item
                         {...field}
-                        name={[field.name, "service"]}
+                        name={[field.name, "roomService"]}
                         label="Dịch vụ cung cấp">
-                        <Select
+                        {/* <Select
                           mode="multiple"
                           allowClear
                           placeholder="Chọn dịch vụ cung cấp"
                           onChange={() => {}}
                           options={options}
-                        />
+                        /> */}
                       </Form.Item>
                     </Col>
                   </Row>
@@ -395,9 +399,9 @@ const HotelForm: FC<Props> = ({}) => {
         </Form.List>
 
         <div className={styles.btnSubmit}>
-          <Button>Trở lại</Button>
+          <Button onClick={() => router.back()}>Trở lại</Button>
           <Button type="primary" htmlType="submit">
-            Tạo mới
+            {hotelDetail ? "Cập nhật" : "Tạo mới"}
           </Button>
         </div>
       </Form>

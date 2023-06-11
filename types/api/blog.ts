@@ -1,7 +1,7 @@
 declare namespace Blog {
   interface BlogDataPayload {
     title: string;
-    category: string;
+    category: number;
     imageUrl: string;
     summary: string;
     content: number;

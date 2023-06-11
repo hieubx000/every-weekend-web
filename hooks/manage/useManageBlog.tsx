@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 
 import { MdDeleteOutline, MdOutlineModeEdit } from "react-icons/md";
 import { Space, Tag, message } from "antd";
@@ -32,7 +32,13 @@ interface DataType {
 const useManageBlog = () => {
   const [tableData, setTableData] = useState<DataType[]>([]);
   const router = useRouter();
-  const {userProfile} = useUserProfile()
+  const { userProfile } = useUserProfile();
+
+  const isCustomer = useMemo(() => {
+    return router.pathname === "/my-blog";
+  }, [router]);
+
+  console.log(isCustomer);
 
   const handleDeleteBlog = useCallback(async (id: string) => {
     try {
@@ -86,7 +92,7 @@ const useManageBlog = () => {
           <MdOutlineModeEdit
             size={20}
             className="hover"
-            onClick={() => router.push(`/manage/blogs/${record.id}`)}
+            onClick={() => router.push(`${router.pathname}/${record.id}`)}
           />
           <ActionConfirm
             title="Xóa bài viết"
@@ -101,7 +107,7 @@ const useManageBlog = () => {
 
   const getData = useCallback(async () => {
     try {
-      const response = await getAllBlogApi({createdBy: userProfile?.id});
+      const response = await getAllBlogApi({ createdBy: userProfile?.id });
 
       const data: DataType[] = [];
       response.data.data.map((item: any) => {
