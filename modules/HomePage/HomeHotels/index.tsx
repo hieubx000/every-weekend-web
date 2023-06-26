@@ -8,7 +8,7 @@ import { getAllTourApi } from "@/api/services/tour";
 
 type Props = {};
 
-const HomeTours: FC<Props> = ({}) => {
+const HomeHotels: FC<Props> = ({}) => {
   // const [tours] = useState(Mock_Data_Tours);
 
   const [tours, setTours] = useState<ITour[]>([]);
@@ -37,4 +37,4 @@ const HomeTours: FC<Props> = ({}) => {
   );
 };
 
-export default memo(HomeTours);
+export default memo(HomeHotels);

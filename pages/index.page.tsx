@@ -4,9 +4,11 @@ import {
   HomeBanner,
   HomePromotion,
   HomeDestinations,
+  HomeHotels,
 } from "@/modules/HomePage";
 import HomeTours from "@/modules/HomePage/HomeTours";
 import SupplierLayout from "@/components/layouts/SupplierLayout";
+import { Divider } from "antd";
 
 export default function Home() {
   return (
@@ -17,16 +19,13 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {true ? (
-        <MainLayout>
-          <HomeBanner />
-          <HomePromotion />
-          <HomeDestinations />
-          <HomeTours />
-        </MainLayout>
-      ) : (
-        <SupplierLayout />
-      )}
+      <MainLayout>
+        <HomeBanner />
+        <HomePromotion />
+        <HomeDestinations />
+        <HomeTours />
+        <HomeHotels />
+      </MainLayout>
     </>
   );
 }

@@ -205,7 +205,7 @@ const MainHeader: FC<Props> = () => {
                 <LinkTo
                   href={homepagePathByRole(userRole)}
                   onClick={() => setLeftDrawer(false)}>
-                  <img src="/assets/icons/header/logo.svg" alt="" />
+                  <img src="/assets/icons/logo.svg" alt="" />
                 </LinkTo>
               </div>
               <div className={styles.navigator}>
@@ -223,7 +223,7 @@ const MainHeader: FC<Props> = () => {
 
           <div className={styles.header_logo}>
             <LinkTo href={homepagePathByRole(userRole)}>
-              <img src="/assets/images/logo.png" alt="" title="" />
+              <img src="/assets/icons/logo.svg" alt="" title="" />
             </LinkTo>
           </div>
 

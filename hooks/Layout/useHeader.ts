@@ -111,10 +111,15 @@ const useHeader = () => {
             {
               id: routerPathConstant.homepage,
               src: "/assets/icons/header/booking.svg",
-              title: "Theo dõi đơn đặt chỗ",
-              link: routerPathConstant.homepage,
+              title: "Theo dõi đơn đặt tour",
+              link: routerPathConstant.myBookingTour,
             },
-
+            {
+              id: routerPathConstant.homepage,
+              src: "/assets/icons/header/booking.svg",
+              title: "Theo dõi đơn đặt khách sạn",
+              link: routerPathConstant.myBookingHotel,
+            },
             {
               id: routerPathConstant.homepage,
               src: "/assets/icons/header/money.svg",

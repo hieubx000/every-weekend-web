@@ -5,4 +5,6 @@ export const routerPathConstant = {
   blogs: "/blogs",
   account: "/account",
   myBlog: "/my-blog",
+  myBookingTour: "/my-booking-tour",
+  myBookingHotel: "/my-booking-hotel",
 };

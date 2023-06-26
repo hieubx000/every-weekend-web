@@ -29,7 +29,7 @@ const Tours: FC<Props> = ({}) => {
         <TourSidebar />
         <div className={styles.content}>
           <div className={styles.header}>
-            <div>0 kết quả được tìm thấy</div>
+            <div>{tours.length || 0} kết quả được tìm thấy</div>
             <div>
               <CiGrid2H />
               <CiGrid41 />

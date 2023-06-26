@@ -1,10 +1,12 @@
-import { FC, memo, useState, useMemo, useCallback } from "react";
+import { FC, memo, useState, useMemo, useCallback, useEffect } from "react";
 
 import styles from "./style.module.scss";
 import MainLayout from "@/components/layouts/MainLayout";
 import { Mock_Data_Tours } from "@/public/assets/mockData/tour";
 import { MdOutlineFavoriteBorder } from "react-icons/md";
 import {
+  convertEnumToProvince,
+  convertTimestampToDate,
   convertTimestampToDateTime,
   convertTimestampToDateTimeAdded,
   numberFormatter,
@@ -23,24 +25,64 @@ import {
   Select,
   Steps,
 } from "antd";
-import {
-  CalendarOutlined,
-  MinusCircleOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { CalendarOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { FiUsers } from "react-icons/fi";
-import ModalPopup from "@/components/common/ModalPopup/ModalPopup";
 import { useRouter } from "next/router";
 import SuccessModal from "@/components/common/Modal/SuccessModal";
+import { handleError } from "@/utils/helper";
+import { ITour } from "@/types/services/tour";
+import { getTourBySlugApi } from "@/api/services/tour";
+import { postCreateBookTourApi } from "@/api/services/booking-tour";
 
 type Props = {};
 
 const TourBooking: FC<Props> = ({}) => {
   const [visible, setVisible] = useState(false);
   const [customerCount, setCustomerCount] = useState(1);
-  const data = Mock_Data_Tours[0];
   const router = useRouter();
+
+  const [tourDetail, setTourDetail] = useState<ITour>();
+
+  const getData = useCallback(async () => {
+    const slug = router.query.tourId ? router.query.tourId.toString() : "";
+
+    if (slug) {
+      try {
+        const response = await getTourBySlugApi(slug);
+
+        setTourDetail({
+          id: response.data.data._id,
+          title: response.data.data.title,
+          slug: response.data.data.slug,
+          imageUrl: response.data.data.imageUrl,
+          about: response.data.data.about,
+          fromDate: response.data.data.fromDate,
+          startTime: response.data.data.startTime,
+          beforeStartTime: response.data.data.beforeStartTime,
+          gatheringPlace: response.data.data.gatheringPlace,
+          numOfDays: response.data.data.numOfDays,
+          maxSlot: response.data.data.maxSlot,
+          vehicle: response.data.data.vehicle,
+          sightseeing: response.data.data.sightseeing,
+          schedule: response.data.data.schedule,
+          price: response.data.data.price,
+          discount: response.data.data.discount,
+          fromDestination: response.data.data.fromDestination,
+          toDestination: response.data.data.toDestination,
+          introduction: response.data.data.introduction,
+          introLink: response.data.data.introLink,
+          tourGuide: response.data.data.tourGuide,
+        });
+      } catch (error) {
+        handleError(error);
+      }
+    }
+  }, [router]);
+
+  useEffect(() => {
+    getData();
+  }, [router]);
 
   const customers = useMemo(() => {
     const list = [];
@@ -50,50 +92,88 @@ const TourBooking: FC<Props> = ({}) => {
     return list;
   }, [customerCount]);
 
-  const onFinish = useCallback(() => {
-    setVisible(true);
-  }, []);
-
-  const postToHomePage = useCallback(() => {
-    router.push("/");
-  }, []);
+  const onFinish = useCallback(
+    async (values: any) => {
+      if (tourDetail && tourDetail.id) {
+        try {
+          await postCreateBookTourApi({
+            cName: values.cName,
+            cEmail: values.cEmail,
+            cPhone: values.cPhone,
+            cAddress: values.cAddress,
+            customer: values.customer.map((item: any) => {
+              return {
+                fullName: item.fullName,
+                gender: item.gender,
+                birthday: 0,
+                cccd: item.cccd,
+              };
+            }),
+            totalCustomer: values.totalCustomer || 1,
+            note: values.note,
+            tour: tourDetail.id,
+          });
+          setVisible(true);
+        } catch (error) {
+          handleError(error);
+        }
+      }
+    },
+    [tourDetail],
+  );
 
   return (
     <MainLayout>
       <div className={styles.container}>
         <div className={styles.enterInformation}>
           <div className={styles.information}>
-            <img src={data.bannerUrl} width={350} alt="" />
+            <img src={tourDetail?.imageUrl[0]} alt="" />
             <div>
               <div className={styles.information_evaluate}>
-                <div className={styles.title_evaluate_rating}>
-                  {data.rating}
-                </div>
+                <div className={styles.title_evaluate_rating}>9.5</div>
                 <div className={styles.information_evaluate_comment}>
                   Tuyệt vời
                 </div>
                 <div className={styles.information_evaluate_favoriteNumber}>
                   <MdOutlineFavoriteBorder />
-                  {data.favoriteNumber}
+                  132
                 </div>
               </div>
-              <div className={styles.information_name}>{data.name}</div>
+              <div className={styles.information_name}>{tourDetail?.title}</div>
               <div className={styles.information_card}>
                 <div>
-                  Khởi hành <b>{convertTimestampToDateTime(data.startTime)}</b>
+                  Khởi hành{" "}
+                  <b>
+                    {moment.unix(tourDetail?.startTime || 0).format("HH:mm")} -{" "}
+                    {convertTimestampToDate(tourDetail?.fromDate || 0)}
+                  </b>
                 </div>
                 <div>
                   Thời gian tập trung
-                  <b> {convertTimestampToDateTime(data.concentrationTime)}</b>
+                  <b>
+                    {" "}
+                    {moment
+                      .unix(tourDetail?.beforeStartTime || 0)
+                      .format("HH:mm")}{" "}
+                    - {convertTimestampToDate(tourDetail?.fromDate || 0)}
+                  </b>
                 </div>
                 <div>
-                  Địa điểm tập trung <b>{data.convetratePlace}</b>
+                  Địa điểm tập trung{" "}
+                  <b>
+                    {tourDetail?.gatheringPlace.map((item, index) => {
+                      return <li key={index}>{item.address}</li>;
+                    })}
+                  </b>
                 </div>
                 <div>
-                  Thời gian <b>{data.dayTime} ngày</b>
+                  Thời gian <b>{tourDetail?.numOfDays} ngày</b>
                 </div>
                 <div>
-                  Nơi khởi hành <b>{data.departure}</b>
+                  Nơi khởi hành{" "}
+                  <b>
+                    {convertEnumToProvince(tourDetail?.fromDestination || 1)}
+                  </b>
                 </div>
               </div>
             </div>
@@ -108,7 +188,7 @@ const TourBooking: FC<Props> = ({}) => {
                 <Row gutter={28}>
                   <Col span={12}>
                     <Form.Item
-                      name="name"
+                      name="cName"
                       label="Họ và tên"
                       rules={[
                         {
@@ -122,7 +202,7 @@ const TourBooking: FC<Props> = ({}) => {
                   <Col span={12}>
                     <Form.Item
                       label="Email"
-                      name="email"
+                      name="cEmail"
                       rules={[
                         {
                           required: true,
@@ -137,7 +217,7 @@ const TourBooking: FC<Props> = ({}) => {
                 <Row gutter={28}>
                   <Col span={12}>
                     <Form.Item
-                      name="phoneNumber"
+                      name="cPhone"
                       label="Số điện thoại"
                       rules={[
                         {
@@ -153,7 +233,7 @@ const TourBooking: FC<Props> = ({}) => {
                     </Form.Item>
                   </Col>
                   <Col span={12}>
-                    <Form.Item label="Địa chỉ" name="address">
+                    <Form.Item label="Địa chỉ" name="cAddress">
                       <Input size="large" placeholder="Nhập địa chỉ" />
                     </Form.Item>
                   </Col>
@@ -164,7 +244,7 @@ const TourBooking: FC<Props> = ({}) => {
                 <h2>Thông tin khách hàng</h2>
                 <Form.Item
                   label="Số lượng khách hàng"
-                  name="scale"
+                  name="totalCustomer"
                   rules={[
                     {
                       required: true,
@@ -186,7 +266,7 @@ const TourBooking: FC<Props> = ({}) => {
                     <Col span={8}>
                       <Form.Item
                         label={`Họ tên khách hàng ${item + 1}`}
-                        name={["customer", item, "name"]}
+                        name={["customer", item, "fullName"]}
                         rules={[
                           {
                             required: true,
@@ -217,7 +297,7 @@ const TourBooking: FC<Props> = ({}) => {
                     <Col span={4}>
                       <Form.Item
                         label="Ngày sinh"
-                        name={["customer", item, "birthday"]}
+                        name={["customer", item, "birthDay"]}
                         rules={[
                           {
                             required: true,
@@ -235,7 +315,7 @@ const TourBooking: FC<Props> = ({}) => {
                     <Col span={8}>
                       <Form.Item
                         label="Số định danh cá nhân (nếu có)"
-                        name={["customer", item, "personalNumber"]}>
+                        name={["customer", item, "cccd"]}>
                         <InputNumber
                           size="large"
                           controls={false}
@@ -253,12 +333,13 @@ const TourBooking: FC<Props> = ({}) => {
                 </Form.Item>
               </div>
             </div>
+
             <Affix offsetTop={80}>
               <div className={styles.summary}>
                 <h2>Tóm tắt chuyến đi</h2>
                 <div className={styles.summary_title}>
-                  <img src={data.bannerUrl} width={100} alt="" />
-                  <h4>{data.name}</h4>
+                  <img src={tourDetail?.imageUrl[0]} width={100} alt="" />
+                  <h4>{tourDetail?.title}</h4>
                 </div>
                 <Steps
                   direction="vertical"
@@ -270,19 +351,23 @@ const TourBooking: FC<Props> = ({}) => {
                       title: "Bắt đầu chuyến đi",
                       description: (
                         <div className={styles.summary_step}>
-                          {convertTimestampToDateTime(data.startTime)}
+                          {moment
+                            .unix(tourDetail?.startTime || 0)
+                            .format("HH:mm")}{" "}
+                          - {convertTimestampToDate(tourDetail?.fromDate || 0)}
                         </div>
                       ),
                     },
                     {
                       icon: <CalendarOutlined />,
                       title: "Kết thúc chuyến đi",
+                      // TODO: handle end date
                       description: (
                         <div className={styles.summary_step}>
-                          {convertTimestampToDateTimeAdded(
-                            data.startTime,
-                            data.dayTime,
-                          )}
+                          {moment
+                            .unix(tourDetail?.startTime || 0)
+                            .format("HH:mm")}{" "}
+                          - {convertTimestampToDate(tourDetail?.fromDate || 0)}
                         </div>
                       ),
                     },
@@ -299,14 +384,14 @@ const TourBooking: FC<Props> = ({}) => {
                 <div className={styles.summary_item}>
                   <div>Đơn giá</div>
                   <div className={styles.summary_item_value}>
-                    {customerCount} x {numberFormatter(data.price)}đ
+                    {customerCount} x {numberFormatter(tourDetail?.price || 0)}đ
                   </div>
                 </div>
 
                 <div className={styles.summary_item}>
                   <div>Giảm giá</div>
                   <div className={styles.summary_item_value}>
-                    {data.discount} %
+                    {tourDetail?.discount} %
                   </div>
                 </div>
 
@@ -316,7 +401,9 @@ const TourBooking: FC<Props> = ({}) => {
                   <h3>Tổng cộng</h3>
                   <div>
                     {numberFormatter(
-                      customerCount * data.price * ((100 - 15) / 100),
+                      customerCount *
+                        (tourDetail?.price || 0) *
+                        ((100 - (tourDetail?.discount || 0)) / 100),
                     )}
                     đ
                   </div>

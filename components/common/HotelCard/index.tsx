@@ -30,7 +30,7 @@ const HotelCard: FC<Props> = ({ data }) => {
           </div>
           <div className={styles.content_booking}>
             <div className={styles.content_booking_price}>
-              Giá mỗi đêm <p>{numberFormatter(data.availability[0].price)}đ</p>
+              Giá mỗi đêm <p>{numberFormatter(data.availability[0]?.price)}đ</p>
             </div>
             <Button>Đặt ngay</Button>
           </div>

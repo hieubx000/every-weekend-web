@@ -50,6 +50,10 @@ export const convertIso8061ToDate = (date: any) => {
   return moment(date).format(dateFormat);
 };
 
+export const convertIso8061ToDateTime = (date: any) => {
+  return moment(date).format("HH:mm - DD/MM/YYYY");
+};
+
 export const numberFormatter = (value: number) => {
   const numberFormatter = Intl.NumberFormat("en-US");
   const formatted = numberFormatter.format(value);
@@ -65,9 +69,14 @@ export const convertEnumToProvince = (number: number) => {
 };
 
 export const convertEnumToStatus = (number: number) => {
-  const res = statusList.find((item) => {
-    return item.id === number;
-  });
+  const res =
+    number > 0
+      ? statusList.find((item) => {
+          return item.id === number;
+        })
+      : statusList.find((item) => {
+          return item.id === 1;
+        });
 
   return res?.name;
 };
@@ -90,7 +99,7 @@ export const convertEnumToVehicle = (number: string) => {
     return item.value === number;
   });
 
-  return res?.label
+  return res?.label;
 };
 
 export const convertEnumToCategory = (number: number) => {
@@ -99,4 +108,13 @@ export const convertEnumToCategory = (number: number) => {
   });
 
   return res?.name;
+};
+
+const getDayOfTimeStampRange = (start: number, end: number) => {
+  const d1 = new Date(start);
+  const d2 = new Date(end);
+  let ms1 = d1.getTime();
+  let ms2 = d2.getTime();
+
+  return Math.ceil((ms2 - ms1) / (24 * 60 * 60 * 1000));
 };

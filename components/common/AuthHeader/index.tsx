@@ -19,7 +19,7 @@ const AuthHeader: FC<Props> = ({}) => {
       <div className={styles.header}>
         <div className={styles.header_logo}>
           <LinkTo href="/">
-            <img src="/assets/images/logo.png" alt="" title="" />
+            <img src="/assets/icons/logo.svg" alt="" title="" />
           </LinkTo>
         </div>
         <div className={styles.header_action}>

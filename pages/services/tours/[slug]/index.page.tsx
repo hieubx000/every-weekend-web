@@ -28,34 +28,36 @@ const TourDetail: FC<Props> = ({}) => {
   const getData = useCallback(async () => {
     const slug = router.query.slug ? router.query.slug.toString() : "";
 
-    try {
-      const response = await getTourBySlugApi(slug);
+    if (slug) {
+      try {
+        const response = await getTourBySlugApi(slug);
 
-      setTourDetail({
-        id: response.data.data._id,
-        title: response.data.data.title,
-        slug: response.data.data.slug,
-        imageUrl: response.data.data.imageUrl,
-        about: response.data.data.about,
-        fromDate: response.data.data.fromDate,
-        startTime: response.data.data.startTime,
-        beforeStartTime: response.data.data.beforeStartTime,
-        gatheringPlace: response.data.data.gatheringPlace,
-        numOfDays: response.data.data.numOfDays,
-        maxSlot: response.data.data.maxSlot,
-        vehicle: response.data.data.vehicle,
-        sightseeing: response.data.data.sightseeing,
-        schedule: response.data.data.schedule,
-        price: response.data.data.price,
-        discount: response.data.data.discount,
-        fromDestination: response.data.data.fromDestination,
-        toDestination: response.data.data.toDestination,
-        introduction: response.data.data.introduction,
-        introLink: response.data.data.introLink,
-        tourGuide: response.data.data.tourGuide,
-      });
-    } catch (error) {
-      handleError(error);
+        setTourDetail({
+          id: response.data.data._id,
+          title: response.data.data.title,
+          slug: response.data.data.slug,
+          imageUrl: response.data.data.imageUrl,
+          about: response.data.data.about,
+          fromDate: response.data.data.fromDate,
+          startTime: response.data.data.startTime,
+          beforeStartTime: response.data.data.beforeStartTime,
+          gatheringPlace: response.data.data.gatheringPlace,
+          numOfDays: response.data.data.numOfDays,
+          maxSlot: response.data.data.maxSlot,
+          vehicle: response.data.data.vehicle,
+          sightseeing: response.data.data.sightseeing,
+          schedule: response.data.data.schedule,
+          price: response.data.data.price,
+          discount: response.data.data.discount,
+          fromDestination: response.data.data.fromDestination,
+          toDestination: response.data.data.toDestination,
+          introduction: response.data.data.introduction,
+          introLink: response.data.data.introLink,
+          tourGuide: response.data.data.tourGuide,
+        });
+      } catch (error) {
+        handleError(error);
+      }
     }
   }, [router]);
 

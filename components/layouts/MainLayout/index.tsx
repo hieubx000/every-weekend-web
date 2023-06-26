@@ -6,6 +6,7 @@ import TopBar from "@/components/common/TopBar";
 import Loading from "@/components/common/Loading";
 import useUserProfile from "@/hooks/useUserProfile";
 import AuthHeader from "@/components/common/AuthHeader";
+import Footer from "@/components/common/Footer";
 
 type Props = {
   children: React.ReactNode;
@@ -36,6 +37,7 @@ const MainLayout: FC<Props> = ({ children, center }) => {
           children
         )}
       </div>
+      <Footer/>
     </div>
   );
 };

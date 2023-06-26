@@ -66,7 +66,7 @@ const useManageHotel = () => {
       title: "Địa chỉ",
       dataIndex: "address",
       key: "address",
-      render: (text: Address[]) => <p>{text[0].address}</p>,
+      render: (text: Address[]) => <p>{text[0]?.address}</p>,
       ellipsis: true,
     },
     {

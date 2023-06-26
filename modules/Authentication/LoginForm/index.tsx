@@ -49,7 +49,7 @@ const LoginForm: FC<Props> = ({}) => {
       onFinish={onFinish}
       autoComplete="off"
       className={styles.container}>
-      <img src="/assets/images/logo.png" alt="" title="" />
+      <img src="/assets/icons/logo.svg" alt="" title="" />
       <Form.Item
         label="Tên đăng nhập"
         name="userName"

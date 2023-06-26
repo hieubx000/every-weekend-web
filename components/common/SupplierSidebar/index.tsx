@@ -6,6 +6,7 @@ import { Menu, MenuProps } from "antd";
 
 import styles from "./style.module.scss";
 import { useRouter } from "next/router";
+import { BookOutlined } from "@ant-design/icons";
 
 type Props = {};
 
@@ -30,6 +31,8 @@ const items: MenuItem[] = [
   getItem("Quản lý khách sạn", "/manage/hotels", <MdOutlineHotel />),
   getItem("Quản lý khách hàng", "/manage/customers", <RiCustomerServiceLine />),
   getItem("Quản lý bài đăng", "/manage/blogs", <TbBrandBlogger />),
+  getItem("Quản lý đơn đặt tour", "/manage/booking-tour", <BookOutlined />),
+  getItem("Quản lý đơn đặt khách sạn", "/manage/booking-hotel", <BookOutlined />),
 ];
 
 const SupplierSidebar: FC<Props> = ({}) => {

@@ -11,58 +11,50 @@ import {
   DatePicker,
   Select,
   InputNumber,
+  message,
 } from "antd";
 import { provinceList } from "@/public/assets/data/intData";
 import { getListAccountApi, postRegister } from "@/api/services/auth";
 import { handleError } from "@/utils/helper";
-import { useDispatch, useSelector } from "react-redux";
-import { setToken } from "@/redux/actions/Token";
-import authSlice, { setTokenUser } from "@/redux/slice/authSlice";
+import { authStorage } from "@/storage/authStorage";
+import { Role } from "@/types/commonTypes";
+import { useRouter } from "next/router";
 
 type Props = {};
 
 const SignUp: FC<Props> = ({}) => {
+  const router = useRouter();
   const onFinish = useCallback(async (values: any) => {
     try {
-      const res = await postRegister({
+      const response = await postRegister({
         userName: values.userName,
         password: values.password,
         name: values.name,
         address: values.address,
         phoneNumber: values.phoneNumber,
       });
-      console.log("MTS2023", res);
+      authStorage.setUserProfile({
+        token: response.data.data.token,
+        role: Role.customer,
+        profile: response.data.data.data,
+      });
+      message.success("Đăng ký tài khoản mới thành công!");
+      router.push("/");
     } catch (error) {
       handleError(error);
     }
   }, []);
 
-  // dispatch(setToken(JSON.stringify(token)));
-  const dispatch = useDispatch();
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
-  };
-  const res = useSelector((state: any) => state.auth.token);
-  const onClick = () => {
-    dispatch(setTokenUser("abc"));
-  };
-  const onClick1 = () => {
-    console.log("ahihi", res);
-  };
-
   return (
     <AuthLayout>
-      <Button onClick={onClick}>Click</Button>
-      <Button onClick={onClick1}>Click1</Button>
       <div className={styles.container}>
         <Form
           name="basic"
           onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
           autoComplete="off"
           className={styles.form}>
           <div className={styles.form_logo}>
-            <img src="/assets/images/logo.png" alt="" title="" />
+            <img src="/assets/icons/logo.svg" alt="" title="" />
           </div>
 
           <h3>Thông tin cá nhân</h3>
