@@ -38,7 +38,7 @@ import { ITour } from "@/types/services/tour";
 import dayjs from "dayjs";
 import moment from "moment";
 import { dateFormat } from "@/utils/patterns";
-import { convertDatePickerToTimestamp } from "@/utils/converts";
+import { convertDatePickerToEndDateTimestamp, convertDatePickerToTimestamp } from "@/utils/converts";
 import { useRouter } from "next/router";
 import { vehicleList } from "@/utils/initData";
 import { Destination } from "@/types/common";
@@ -143,7 +143,7 @@ const TourForm: FC<Props> = ({ tourDetail }) => {
               title: values.title,
               imageUrl: pictureCertificate,
               about: values.about,
-              fromDate: convertDatePickerToTimestamp(values.fromDate),
+              fromDate: convertDatePickerToEndDateTimestamp(values.fromDate),
               startTime: convertDatePickerToTimestamp(values.startTime),
               beforeStartTime: convertDatePickerToTimestamp(
                 values.beforeStartTime,

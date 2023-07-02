@@ -9,12 +9,10 @@ import { getAllTourApi } from "@/api/services/tour";
 type Props = {};
 
 const HomeTours: FC<Props> = ({}) => {
-  // const [tours] = useState(Mock_Data_Tours);
-
   const [tours, setTours] = useState<ITour[]>([]);
   const getData = useCallback(async () => {
     try {
-      const response = await getAllTourApi();
+      const response = await getAllTourApi({page: 1, limit: 6});
       setTours(response.data.data);
     } catch (error) {}
   }, []);

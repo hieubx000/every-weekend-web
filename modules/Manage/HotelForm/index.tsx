@@ -82,6 +82,7 @@ const HotelForm: FC<Props> = ({ hotelDetail }) => {
               introLink: values.introLink,
               hotelService: values.hotelService,
               availability: values.availability,
+              price: values.availability[0].price,
             })
           : await postCreateHotelApi({
               title: values.title,
@@ -92,6 +93,7 @@ const HotelForm: FC<Props> = ({ hotelDetail }) => {
               introLink: values.introLink,
               hotelService: values.hotelService,
               availability: values.availability,
+              price: values.availability[0].price,
             });
         router.back();
         message.success("Tạo khách sạn thành công!");
@@ -171,10 +173,7 @@ const HotelForm: FC<Props> = ({ hotelDetail }) => {
           </Select>
         </Form.Item>
 
-        <Form.Item
-          name="address"
-          label="Vị trí"
-          >
+        <Form.Item name="address" label="Vị trí">
           {renderAddress}
         </Form.Item>
 

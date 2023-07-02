@@ -21,6 +21,9 @@ import { getAllDestinationApi } from "@/api/services/destination";
 import { handleError } from "@/utils/helper";
 import { BiSearch } from "react-icons/bi";
 import { SearchOutlined } from "@ant-design/icons";
+import { numOfDayList } from "@/modules/Services/Tours/TourSidebar";
+import { useRouter } from "next/router";
+import { convertDatePickerToEndDateTimestamp } from "@/utils/converts";
 
 type Props = {};
 
@@ -71,6 +74,7 @@ type Tab = {
 
 const HomeBanner: FC<Props> = ({}) => {
   const [form] = Form.useForm();
+  const router = useRouter();
 
   const onSearch = useCallback(() => {}, []);
 
@@ -108,7 +112,31 @@ const HomeBanner: FC<Props> = ({}) => {
       ),
       children: (
         <div className={styles.tabs__children}>
-          <Form className={styles.tabs__children__form} name="basic">
+          <Form
+            className={styles.tabs__children__form}
+            name="basic"
+            onFinish={(e) => {
+              const queryString: any = {};
+              if (e.fromDestination) {
+                queryString.fromDestination = e.fromDestination;
+              }
+              if (e.toDestination) {
+                queryString.toDestination = e.toDestination;
+              }
+              if (e.fromDate) {
+                queryString.fromDate = convertDatePickerToEndDateTimestamp(
+                  e.fromDate,
+                );
+              }
+              if (e.numOfDays) {
+                queryString.numOfDayFilter = e.numOfDays;
+              }
+
+              router.push({
+                pathname: "/services/tours",
+                query: { ...queryString },
+              });
+            }}>
             <Form.Item
               className={styles.tabs__children__form__item}
               name="fromDestination">
@@ -149,10 +177,11 @@ const HomeBanner: FC<Props> = ({}) => {
               className={styles.tabs__children__form__item}
               name="numOfDays">
               <Select placeholder="Chọn số ngày" allowClear size="large">
-                <Select.Option value="All">Tất cả</Select.Option>
-                <Select.Option value="1">1-3 ngày</Select.Option>
-                <Select.Option value="2">3-5 ngày</Select.Option>
-                <Select.Option value="3">1 tuần</Select.Option>
+                {numOfDayList.map((item) => (
+                  <Select.Option key={item.id} value={item.id}>
+                    {item.title}
+                  </Select.Option>
+                ))}
               </Select>
             </Form.Item>
 
@@ -181,71 +210,38 @@ const HomeBanner: FC<Props> = ({}) => {
           <Form
             className={styles.tabs__children__form}
             name="basic"
-            // labelCol={{ span: 8 }}
-            // wrapperCol={{ span: 16 }}
-            // style={{ maxWidth: 600 }}
-            initialValues={{ remember: true }}
-            // onFinish={onFinish}
-            // onFinishFailed={onFinishFailed}
-            autoComplete="off">
+            onFinish={(e) => {
+              const queryString: any = {};
+              if (e.toDestination) {
+                queryString.toDestination = e.toDestination;
+              }
+
+              router.push({
+                pathname: "/services/hotels",
+                query: { ...queryString },
+              });
+            }}>
             <Form.Item
               className={styles.tabs__children__form__item}
-              name="diemDi"
-              rules={[{ required: true, message: "" }]}>
-              <Select
-                placeholder="Chọn điểm đến"
-                allowClear
-                showSearch
-                // filterOption={filterSelectOption}
-              >
-                <Select.Option value="Hanoi">Hà Nội</Select.Option>
-                <Select.Option value="Thainguyen">Thái Nguyên</Select.Option>
-              </Select>
-            </Form.Item>
-            <img src="/assets/icons/two-way.svg" width={24} alt="" />
-            <Form.Item
-              className={styles.tabs__children__form__item}
-              name="diemDen"
-              rules={[{ required: true, message: "" }]}>
-              <Select
-                placeholder="Chọn điểm đến"
-                allowClear
-                showSearch
-                // filterOption={filterSelectOption}
-              >
-                <Select.Option value="Hanoi">Hà Nội</Select.Option>
-                <Select.Option value="Thainguyen">Thái Nguyên</Select.Option>
+              style={{ width: "100%", marginRight: "32px" }}
+              name="toDestination">
+              <Select placeholder="Chọn điểm đến" allowClear size="large">
+                {destinations.map((item: any) => (
+                  <Select.Option key={item.id} value={item.id}>
+                    {item.title}
+                  </Select.Option>
+                ))}
               </Select>
             </Form.Item>
 
-            <Form.Item
-              name="startDate"
-              className={styles.tabs__children__form__item}
-              rules={[{ required: true, message: "" }]}>
-              <DatePicker format={dateFormat} />
-            </Form.Item>
-
-            <Form.Item
-              className={styles.tabs__children__form__item}
-              name="soNgay"
-              rules={[{ required: true, message: "" }]}>
-              <Select
-                placeholder="Chọn số ngày"
-                allowClear
-                showSearch
-                // filterOption={filterSelectOption}
-              >
-                <Select.Option value="All">Tất cả</Select.Option>
-                <Select.Option value="1">1-3 ngày</Select.Option>
-                <Select.Option value="2">3-5 ngày</Select.Option>
-                <Select.Option value="3">1 tuần</Select.Option>
-              </Select>
-            </Form.Item>
-
-            <div className={styles.tabs__children__form__searchBtn}>
-              <img src="/assets/icons/search.svg" width={20} alt="" />
+            <Button
+              htmlType="submit"
+              type="primary"
+              shape="round"
+              icon={<SearchOutlined />}
+              size="large">
               Tìm kiếm
-            </div>
+            </Button>
           </Form>
         </div>
       ),
@@ -258,7 +254,7 @@ const HomeBanner: FC<Props> = ({}) => {
           <div>Vé máy bay</div>
         </div>
       ),
-      children: <div className={styles.tabs__children}>Vé máy bay</div>,
+      children: <div className={styles.tabs__children}>Dịch vụ hiện tại chưa có</div>,
     },
     {
       key: "4",
@@ -268,7 +264,7 @@ const HomeBanner: FC<Props> = ({}) => {
           <div>Tra cứu booking</div>
         </div>
       ),
-      children: <div className={styles.tabs__children}>Tra cứu booking</div>,
+      children: <div className={styles.tabs__children}>Dịch vụ hiện tại chưa có</div>,
     },
   ];
 

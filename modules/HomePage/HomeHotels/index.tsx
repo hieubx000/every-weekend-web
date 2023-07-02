@@ -5,17 +5,18 @@ import { ITour } from "@/types/services/tour";
 import TourCard from "@/components/common/TourCard";
 import { Mock_Data_Tours } from "@/public/assets/mockData/tour";
 import { getAllTourApi } from "@/api/services/tour";
+import HotelCard from "@/components/common/HotelCard";
+import { IHotel } from "@/types/services/hotels";
+import { getAllHotelApi } from "@/api/services/hotel";
 
 type Props = {};
 
 const HomeHotels: FC<Props> = ({}) => {
-  // const [tours] = useState(Mock_Data_Tours);
-
-  const [tours, setTours] = useState<ITour[]>([]);
+  const [hotels, setHotels] = useState<IHotel[]>([]);
   const getData = useCallback(async () => {
     try {
-      const response = await getAllTourApi();
-      setTours(response.data.data);
+      const response = await getAllHotelApi({page: 1, limit: 5});
+      setHotels(response.data.data);
     } catch (error) {}
   }, []);
 
@@ -25,11 +26,11 @@ const HomeHotels: FC<Props> = ({}) => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.title}>Tour du lịch</div>
+      <div className={styles.title}>Khách Sạn</div>
       <div>
         <div className={styles.content}>
-          {tours.map((item, index) => (
-            <TourCard key={index} data={item} />
+          {hotels.map((item, index) => (
+            <HotelCard key={index} data={item} />
           ))}
         </div>
       </div>

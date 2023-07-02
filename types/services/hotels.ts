@@ -14,6 +14,7 @@ export type IHotel = {
   availability: Room[];
   rating?: number;
   faqs?: FAQS[];
+  price?: number;
 };
 
 export type HotelRules = {

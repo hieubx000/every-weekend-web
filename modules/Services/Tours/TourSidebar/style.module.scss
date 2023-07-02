@@ -71,20 +71,30 @@
     }
 
     &_box {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
 
-        &_item{
-            background: var(--white);
-            border: 1px solid var(--primary-color);
-            border-radius: var(--border-radius);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 40px;
-            cursor: pointer;
+      &_item {
+        -webkit-user-select: none;
+        user-select: none;
+
+        background: var(--white);
+        border: 1px solid var(--primary-color);
+        border-radius: var(--border-radius);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+        cursor: pointer;
+
+        &_active {
+          background: var(--secondary-color);
+          color: var(--white);
+          border: none;
+          font-weight: 700;
         }
+      }
     }
   }
 }

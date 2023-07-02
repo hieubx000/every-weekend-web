@@ -46,6 +46,10 @@ export const convertDatePickerToTimestamp = (date: any) => {
   return parseInt(moment(date.$d).format("X"));
 };
 
+export const convertDatePickerToEndDateTimestamp = (date: any) => {
+  return parseInt(moment(moment(date.$d).format("YYYY-MM-DD")).format("X"));
+};
+
 export const convertIso8061ToDate = (date: any) => {
   return moment(date).format(dateFormat);
 };
