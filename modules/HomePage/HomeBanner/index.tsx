@@ -16,14 +16,18 @@ import {
 import { MdOutlineAirplaneTicket, MdTravelExplore } from "react-icons/md";
 import { FaHotel } from "react-icons/fa";
 import { TbReportSearch } from "react-icons/tb";
-import { provinceList } from "@/public/assets/data/intData";
+import { airportList, provinceList } from "@/public/assets/data/intData";
 import { getAllDestinationApi } from "@/api/services/destination";
 import { handleError } from "@/utils/helper";
 import { BiSearch } from "react-icons/bi";
 import { SearchOutlined } from "@ant-design/icons";
 import { numOfDayList } from "@/modules/Services/Tours/TourSidebar";
 import { useRouter } from "next/router";
-import { convertDatePickerToEndDateTimestamp } from "@/utils/converts";
+import {
+  convertDatePickerToEndDate,
+  convertDatePickerToEndDateTimestamp,
+} from "@/utils/converts";
+import dayjs from "dayjs";
 
 type Props = {};
 
@@ -254,7 +258,112 @@ const HomeBanner: FC<Props> = ({}) => {
           <div>Vé máy bay</div>
         </div>
       ),
-      children: <div className={styles.tabs__children}>Dịch vụ hiện tại chưa có</div>,
+      children: (
+        <div className={styles.tabs__children}>
+          <Form
+            name="basic"
+            onFinish={(e) => {
+              router.push(
+                `https://www.traveloka.com/vi-vn/flight/fullsearch?ap=${
+                  e.fromDestination
+                }.${e.toDestination}&dt=${convertDatePickerToEndDate(
+                  e.fromDate,
+                )}.NA&ps=${e.count}.0.0&sc=${e.seatClass}`,
+              );
+            }}
+            initialValues={{
+              fromDestination: airportList[0].nickname,
+              toDestination: airportList[1].nickname,
+              count: 1,
+              fromDate: dayjs("15-07-2023", dateFormat),
+              seatClass: "ECONOMY",
+            }}
+            style={{ display: "grid", gap: "24px" }}>
+            <div className={styles.tabs__children__form}>
+              <Form.Item
+                label="Từ"
+                className={styles.tabs__children__form__item}
+                name="fromDestination"
+                style={{ width: "30%" }}>
+                <Select size="large">
+                  {(airportList || []).map((item) => (
+                    <Select.Option key={item.id} value={item.nickname}>
+                      {item.name} ({item.nickname})
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+
+              <img src="/assets/icons/two-way.svg" width={24} alt="" />
+
+              <Form.Item
+                label="Đến"
+                className={styles.tabs__children__form__item}
+                name="toDestination"
+                style={{ width: "30%" }}>
+                <Select size="large">
+                  {(airportList || []).map((item) => (
+                    <Select.Option key={item.id} value={item.nickname}>
+                      {item.name} ({item.nickname})
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="Số hành khách"
+                className={styles.tabs__children__form__item}
+                style={{ width: "30%" }}
+                name="count">
+                <Select size="large">
+                  {[1, 2, 3, 4].map((item) => (
+                    <Select.Option key={item} value={item}>
+                      {item}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </div>
+            <div className={styles.tabs__children__form}>
+              <Form.Item
+                label="Ngày đi"
+                name="fromDate"
+                className={styles.tabs__children__form__item}
+                style={{ width: "30%" }}>
+                <DatePicker
+                  size="large"
+                  format={dateFormat}
+                  placeholder="Chọn ngày đi"
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Hạng ghế"
+                className={styles.tabs__children__form__item}
+                name="seatClass"
+                style={{ width: "30%" }}>
+                <Select size="large">
+                  <Select.Option value="ECONOMY">Phổ Thông</Select.Option>
+                  <Select.Option value="PREMIUM_ECONOMY">
+                    Phổ Thông Đặc Biệt
+                  </Select.Option>
+                  <Select.Option value="BUSINESS">Thương Gia</Select.Option>
+                  <Select.Option value="FIRST">Hạng Nhất</Select.Option>
+                </Select>
+              </Form.Item>
+              <Button
+                style={{ width: "25.5%", marginTop: "30px" }}
+                htmlType="submit"
+                type="primary"
+                shape="round"
+                icon={<SearchOutlined />}
+                size="large">
+                Tìm kiếm
+              </Button>
+            </div>
+          </Form>
+        </div>
+      ),
     },
     {
       key: "4",
@@ -264,7 +373,9 @@ const HomeBanner: FC<Props> = ({}) => {
           <div>Tra cứu booking</div>
         </div>
       ),
-      children: <div className={styles.tabs__children}>Dịch vụ hiện tại chưa có</div>,
+      children: (
+        <div className={styles.tabs__children}>Dịch vụ hiện tại chưa có</div>
+      ),
     },
   ];
 

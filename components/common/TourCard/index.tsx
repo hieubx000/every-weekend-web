@@ -23,7 +23,7 @@ const TourCard: FC<Props> = ({ data }) => {
       <div className={styles.content}>
         <div>
           <div className={styles.content_date}>
-            {convertTimestampToDate(data.startTime)} - {data.numOfDays} ngày
+            {convertTimestampToDate(data.fromDate)} - {data.numOfDays} ngày
           </div>
           <div className={styles.content_name}>{data.title}</div>
         </div>

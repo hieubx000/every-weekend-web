@@ -9568,3 +9568,30 @@ export const communeList = [
     name: "Xã Lý Nhơn",
   },
 ];
+
+export const airportList = [
+  {
+    id: "1",
+    address: "Hà Nội, Việt Nam",
+    name: "Nội Bài",
+    nickname: "HAN",
+  },
+  {
+    id: "2",
+    address: "Đà Nẵng, Việt Nam",
+    name: "Đà Nẵng",
+    nickname: "DAD",
+  },
+  {
+    id: "3",
+    address: "Đà Lạt, Việt Nam",
+    name: "Liên Khương",
+    nickname: "DLI",
+  },
+  {
+    id: "4",
+    address: "Thành phố Hồ Chí Minh, Việt Nam",
+    name: "Tân Sơn Nhất",
+    nickname: "SGN",
+  },
+];

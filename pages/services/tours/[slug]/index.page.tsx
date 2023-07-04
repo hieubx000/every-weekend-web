@@ -54,6 +54,7 @@ const TourDetail: FC<Props> = ({}) => {
           introduction: response.data.data.introduction,
           introLink: response.data.data.introLink,
           tourGuide: response.data.data.tourGuide,
+          priceBefore: response.data.data.priceBefore
         });
       } catch (error) {
         handleError(error);

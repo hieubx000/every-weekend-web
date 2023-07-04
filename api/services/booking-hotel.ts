@@ -10,6 +10,15 @@ export const postCreateBookHotelApi = async (
   return res;
 };
 
+export const changeStatusBookHotelApi = async (
+  id: string,
+  data: BookingHotel.BookingHotelDataPayload,
+): Promise<AxiosResponse> => {
+  const res = await requestApi().patch(`/booking-hotel/${id}`, data);
+
+  return res;
+};
+
 export const getAllBookingHotelApi = async (
   params?: any,
 ): Promise<AxiosResponse> => {

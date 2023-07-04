@@ -28,4 +28,5 @@ export type ITour = {
   introduction: string;
   introLink: string;
   rate?: number;
+  priceBefore: number;
 };

@@ -2,16 +2,13 @@ import { useRouter } from "next/router";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 
 import { MdDeleteOutline, MdOutlineModeEdit } from "react-icons/md";
-import { Space, Tag, message } from "antd";
+import { Button, Select, Space, Tag, message } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { IBreadcrumb } from "@/components/common/CustomBreadcrumb";
 import { deleteUserApi, getListAccountApi } from "@/api/services/auth";
 import {
   convertEnumStatusToColorTag,
-  convertEnumToCategory,
-  convertEnumToProvince,
   convertEnumToStatus,
-  convertIso8061ToDate,
   convertIso8061ToDateTime,
   convertTimestampToDate,
 } from "@/utils/converts";
@@ -19,11 +16,17 @@ import ActionConfirm from "@/components/common/ActionConfirm";
 import { handleError } from "@/utils/helper";
 import { deleteBlogApi, getAllBlogApi } from "@/api/services/blog";
 import useUserProfile from "../useUserProfile";
-import { getAllBookingTourApi } from "@/api/services/booking-tour";
+import {
+  changeStatusBookTourApi,
+  getAllBookingTourApi,
+} from "@/api/services/booking-tour";
 import { BookingTour } from "@/types/api/booking-tour";
 import { ITour } from "@/types/services/tour";
+import { Role } from "@/types/commonTypes";
+import { statusList } from "@/utils/initData";
 
 interface DataType extends BookingTour.BookingTourDataPayload {
+  _id: string;
   id: string;
   key: string;
 }
@@ -31,23 +34,26 @@ interface DataType extends BookingTour.BookingTourDataPayload {
 const useManageBookingTour = () => {
   const [tableData, setTableData] = useState<DataType[]>([]);
   const router = useRouter();
-  const { userProfile } = useUserProfile();
+  const { userProfile, userRole } = useUserProfile();
 
   const isCustomer = useMemo(() => {
     return router.pathname === "/my-blog";
   }, [router]);
 
-  console.log(isCustomer);
+  console.log(userRole);
 
-  const handleDeleteBlog = useCallback(async (id: string) => {
-    try {
-      await deleteBlogApi(id);
-      getData();
-      message.success("Xóa bài viết thành công");
-    } catch (error) {
-      message.error("Xóa bài viết thất bại");
-    }
-  }, []);
+  const handleChangeStatus = useCallback(
+    async (id: string, status: number, data: DataType) => {
+      try {
+        await changeStatusBookTourApi(id, { ...data, status: status });
+        message.success("Hủy đăng ký thành công");
+        getData();
+      } catch (error) {
+        message.error("Hủy đăng ký thất bại");
+      }
+    },
+    [],
+  );
 
   const tableColumns: ColumnsType<DataType> = [
     {
@@ -100,25 +106,33 @@ const useManageBookingTour = () => {
       render: (time) => <p>{convertIso8061ToDateTime(time)}</p>,
       ellipsis: true,
     },
-    // {
-    //   title: "Action",
-    //   key: "action",
-    //   render: (_, record) => (
-    //     <Space size="middle">
-    //       <MdOutlineModeEdit
-    //         size={20}
-    //         className="hover"
-    //         onClick={() => router.push(`${router.pathname}/${record.id}`)}
-    //       />
-    //       <ActionConfirm
-    //         title="Xóa bài viết"
-    //         description="Bạn chắc chắn muốn xóa bài viết này?"
-    //         handleConfirm={handleDeleteBlog.bind(this, record.id)}>
-    //         <MdDeleteOutline size={20} className="hover" />
-    //       </ActionConfirm>
-    //     </Space>
-    //   ),
-    // },
+    {
+      title: "",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          {userRole === Role.customer && record.status !== 4 ? (
+            <Button
+              style={{ margin: 0 }}
+              onClick={async () => {
+                handleChangeStatus(record._id, 4, record);
+              }}>
+              Hủy đăng ký
+            </Button>
+          ) : undefined}
+          {userRole === Role.supplier ? (
+            <Select
+              onChange={(e) => handleChangeStatus(record._id, e, record)}
+              value={record.status}
+              style={{ width: 150 }}
+              options={statusList.map((item) => {
+                return { label: item.name, value: item.id };
+              })}
+            />
+          ) : undefined}
+        </Space>
+      ),
+    },
   ];
 
   const getData = useCallback(async () => {

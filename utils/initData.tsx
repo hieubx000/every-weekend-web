@@ -48,6 +48,10 @@ export const statusList = [
     id: 3,
     name: "Bị ẩn",
   },
+  {
+    id: 4,
+    name: "Đã hủy",
+  },
 ];
 
 export const vehicleList = [

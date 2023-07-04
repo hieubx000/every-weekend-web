@@ -200,16 +200,20 @@ const TourSideBar: FC<Props> = ({
           <DatePicker
             size="large"
             format={dateFormat}
-            value={dayjs(
-              moment
-                .unix(
-                  router.query.fromDate
-                    ? parseInt(router.query.fromDate.toString())
-                    : 0,
-                )
-                .format(dateFormat),
-              dateFormat,
-            )}
+            value={
+              router.query.fromDate
+                ? dayjs(
+                    moment
+                      .unix(
+                        router.query.fromDate
+                          ? parseInt(router.query.fromDate.toString())
+                          : 0,
+                      )
+                      .format(dateFormat),
+                    dateFormat,
+                  )
+                : undefined
+            }
             onChange={(e) => {
               router.push({
                 query: {

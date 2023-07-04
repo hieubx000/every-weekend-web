@@ -46,6 +46,9 @@ export const convertDatePickerToTimestamp = (date: any) => {
   return parseInt(moment(date.$d).format("X"));
 };
 
+export const convertDatePickerToEndDate = (date: any) => {
+  return moment(date.$d).format("DD-MM-YYYY");
+};
 export const convertDatePickerToEndDateTimestamp = (date: any) => {
   return parseInt(moment(moment(date.$d).format("YYYY-MM-DD")).format("X"));
 };
@@ -93,6 +96,8 @@ export const convertEnumStatusToColorTag = (number: number) => {
       return "success";
     case 3:
       return "error";
+    case 4:
+      return "default";
     default:
       return "processing";
   }

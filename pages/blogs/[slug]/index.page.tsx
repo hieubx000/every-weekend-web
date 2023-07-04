@@ -7,13 +7,18 @@ import { Col, Divider, Image, Row } from "antd";
 import { useRouter } from "next/router";
 import { ClockCircleOutlined, FacebookOutlined } from "@ant-design/icons";
 import moment from "moment";
-import { convertIso8061ToDate, convertTimestampToDate } from "@/utils/converts";
+import {
+  convertDatePickerToEndDate,
+  convertEnumToCategory,
+  convertIso8061ToDate,
+  convertTimestampToDate,
+} from "@/utils/converts";
 import parse from "html-react-parser";
 import { routerPathConstant } from "@/constants/routerConstant";
 import Slider from "@ant-design/react-slick";
 import Blogcard from "@/components/common/Blogcard";
 import { handleError } from "@/utils/helper";
-import { getBlogBySlugApi } from "@/api/services/blog";
+import { getAllBlogApi, getBlogBySlugApi } from "@/api/services/blog";
 import { Blog } from "@/types/common";
 
 type Props = {};
@@ -51,32 +56,35 @@ const sliderSettings = {
 const BlogDetail: FC<Props> = ({}) => {
   const router = useRouter();
   const [blog, setBlog] = useState<Blog>();
-  console.log(router.query.slug);
+  const [blogs, setBlogs] = useState<Blog[]>();
 
   const getData = useCallback(async () => {
-    const slug = router.query.slug?.toString() || "";
-    try {
-      const response = await getBlogBySlugApi(slug);
-      console.log(response.data.data);
-      setBlog({
-        id: response.data.data.id,
-        title: response.data.data.title,
-        category: response.data.data.category,
-        imageUrl: response.data.data.imageUrl,
-        status: response.data.data.status,
-        content: response.data.data.content,
-        summary: response.data.data.summary,
-        createdAt: convertIso8061ToDate(response.data.data.createdAt),
-        slug: response.data.data.slug,
-      });
-    } catch (error) {
-      handleError(error);
+    const slug = router.query.slug ? router.query.slug.toString() : "";
+    if (slug) {
+      try {
+        const response = await getBlogBySlugApi(slug);
+        setBlog({
+          id: response.data.data.id,
+          title: response.data.data.title,
+          category: response.data.data.category,
+          imageUrl: response.data.data.imageUrl,
+          status: response.data.data.status,
+          content: response.data.data.content,
+          summary: response.data.data.summary,
+          createdAt: convertIso8061ToDate(response.data.data.createdAt),
+          slug: response.data.data.slug,
+        });
+        const res = await getAllBlogApi({ page: 1, limit: 6 });
+        setBlogs(res.data.data);
+      } catch (error) {
+        handleError(error);
+      }
     }
   }, [router]);
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [router]);
 
   return (
     <MainLayout>
@@ -162,19 +170,19 @@ const BlogDetail: FC<Props> = ({}) => {
                 </span>
                 <Divider />
                 <>
-                  {[1, 22, 3, 4].map((item, index) => (
+                  {(blogs || []).map((item, index) => (
                     <div
                       key={index}
                       className={styles.item}
                       onClick={() =>
                         router.push(
-                          `/${routerPathConstant.blogs}/${blog?.slug}`,
+                          `/${routerPathConstant.blogs}/${item?.slug}`,
                         )
                       }>
                       <div>
                         <Image
                           preview={false}
-                          src={blog?.imageUrl}
+                          src={item?.imageUrl}
                           style={{ borderRadius: "6px" }}
                           width={160}
                           height={90}
@@ -182,15 +190,15 @@ const BlogDetail: FC<Props> = ({}) => {
                       </div>
                       <div className={styles.item_content}>
                         <p className={styles.item_content_title}>
-                          {blog?.title}
+                          {item?.title}
                         </p>
                         <div className={styles.item_category}>
-                          Tiêu đề bài viết
+                          {convertEnumToCategory(item.category)}
                         </div>
                         <div>
                           <ClockCircleOutlined style={{ color: "#838383" }} />
                           <span className={styles.item_time}>
-                            {blog?.createdAt}
+                            {convertIso8061ToDate(item?.createdAt)}
                           </span>
                         </div>
                       </div>
@@ -206,9 +214,9 @@ const BlogDetail: FC<Props> = ({}) => {
               </span>
               <div>
                 <Row gutter={28}>
-                  {[1, 2, 3, 4, 5, 6].map((item, index) => (
+                  {(blogs || []).map((item, index) => (
                     <Col span={8} style={{ margin: "12px 0" }}>
-                      {blog && <Blogcard item={blog} />}
+                      {blog && <Blogcard item={item} />}
                     </Col>
                   ))}
                 </Row>

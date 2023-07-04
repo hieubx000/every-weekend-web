@@ -9,5 +9,6 @@ declare namespace BookingHotel {
     totalPrice: number;
     note?: string;
     hotel: string | IHotel;
+    status?: number;
   }
 }

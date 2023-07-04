@@ -161,6 +161,7 @@ const TourForm: FC<Props> = ({ tourDetail }) => {
               introduction: values.introduction,
               introLink: values.introLink,
               tourGuide: "",
+              priceBefore: (values.price / 100) * (100 - values.discount)
             })
           : await postCreateTourApi({
               title: values.title,
@@ -184,6 +185,7 @@ const TourForm: FC<Props> = ({ tourDetail }) => {
               introduction: values.introduction,
               introLink: values.introLink,
               tourGuide: "",
+              priceBefore: (values.price / 100) * (100 - values.discount)
             });
         router.back();
         message.success("Đăng tour thành công");
