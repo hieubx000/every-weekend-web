@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react'
 // import { useAppSelector } from 'src/redux'
 // import { handleError } from 'src/utils/helper'
 import styles from './Map.module.scss'
-import { useSelector } from 'react-redux'
 import { communeList, districtList, provinceList } from '@/public/assets/data/intData'
 
 interface IProps {
