@@ -9,8 +9,8 @@ import { SegmentedValue } from "antd/es/segmented";
 import { useRouter } from "next/router";
 import { Blog } from "@/types/common";
 import { handleError } from "@/utils/helper";
-import { getAllBlogApi } from "@/api/services/blog";
 import { convertIso8061ToDate } from "@/utils/converts";
+import { getAllBlogApi } from "../api/services/blog";
 
 type Props = {};
 

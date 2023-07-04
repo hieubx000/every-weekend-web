@@ -6,11 +6,10 @@ import { IBreadcrumb } from "@/components/common/CustomBreadcrumb";
 import BlogForm from "@/modules/Manage/BlogForm";
 import { useRouter } from "next/router";
 import { Blog, Destination } from "@/types/common";
-import { getBlogByIdApi } from "@/api/services/blog";
 import { handleError } from "@/utils/helper";
 import AdminLayout from "@/components/layouts/AdminLayout";
 import DestinationForm from "@/modules/Manage/DestinationForm";
-import { getDestinationByIdApi } from "@/api/services/destination";
+import { getDestinationByIdApi } from "@/pages/api/services/destination";
 
 type Props = {};
 

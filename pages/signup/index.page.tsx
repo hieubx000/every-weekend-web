@@ -14,11 +14,11 @@ import {
   message,
 } from "antd";
 import { provinceList } from "@/public/assets/data/intData";
-import { getListAccountApi, postRegister } from "@/api/services/auth";
 import { handleError } from "@/utils/helper";
 import { authStorage } from "@/storage/authStorage";
 import { Role } from "@/types/commonTypes";
 import { useRouter } from "next/router";
+import { postRegister } from "../api/services/auth";
 
 type Props = {};
 

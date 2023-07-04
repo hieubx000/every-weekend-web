@@ -6,7 +6,6 @@ import { Space, Tag, message } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { IBreadcrumb } from "@/components/common/CustomBreadcrumb";
 import { Destination, User } from "@/types/common";
-import { deleteTourApi, getAllTourApi } from "@/api/services/tour";
 import { handleError } from "@/utils/helper";
 import {
   convertEnumToProvince,
@@ -14,6 +13,7 @@ import {
 } from "@/utils/converts";
 import useUserProfile from "../useUserProfile";
 import ActionConfirm from "@/components/common/ActionConfirm";
+import { deleteTourApi, getAllTourApi } from "@/pages/api/services/tour";
 
 interface DataType {
   key: string;

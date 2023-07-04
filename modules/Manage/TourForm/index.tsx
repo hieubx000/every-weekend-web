@@ -33,7 +33,6 @@ import {
 import { useManageTourForm } from "@/hooks/manage/useManageTourForm";
 
 import styles from "./style.module.scss";
-import { patchUpdateTourApi, postCreateTourApi } from "@/api/services/tour";
 import { ITour } from "@/types/services/tour";
 import dayjs from "dayjs";
 import moment from "moment";
@@ -42,7 +41,8 @@ import { convertDatePickerToEndDateTimestamp, convertDatePickerToTimestamp } fro
 import { useRouter } from "next/router";
 import { vehicleList } from "@/utils/initData";
 import { Destination } from "@/types/common";
-import { getAllDestinationApi } from "@/api/services/destination";
+import { getAllDestinationApi } from "@/pages/api/services/destination";
+import { patchUpdateTourApi, postCreateTourApi } from "@/pages/api/services/tour";
 
 type Props = {
   tourDetail?: ITour;

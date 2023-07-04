@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { Tour } from "@/types/api/tour";
 import { ITour } from "@/types/services/tour";
 import { handleError } from "@/utils/helper";
-import { getTourByIdApi } from "@/api/services/tour";
+import { getTourByIdApi } from "@/pages/api/services/tour";
 
 type Props = {};
 
@@ -62,6 +62,7 @@ const EditTour: FC<Props> = ({}) => {
         introduction: response.data.data.introduction,
         introLink: response.data.data.introLink,
         tourGuide: response.data.data.tourGuide,
+        priceBefore: response.data.data.priceBefore
       });
     } catch (error) {
       handleError(error);

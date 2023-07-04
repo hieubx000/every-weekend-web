@@ -5,8 +5,8 @@ import Slider from "react-slick";
 import DestinationCard from "../../../components/common/DestinationCard";
 import { IDestination } from "@/types/services/destination";
 import { Destination } from "@/types/common";
-import { getAllDestinationApi } from "@/api/services/destination";
 import { handleError } from "@/utils/helper";
+import { getAllDestinationApi } from "@/pages/api/services/destination";
 
 type Props = {};
 

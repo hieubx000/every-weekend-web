@@ -19,8 +19,8 @@ import {
 } from "antd";
 import { numberFormatter } from "@/utils/converts";
 import { handleError } from "@/utils/helper";
-import { getAllDestinationApi } from "@/api/services/destination";
 import { useRouter } from "next/router";
+import { getAllDestinationApi } from "@/pages/api/services/destination";
 
 type Props = {};
 

@@ -3,11 +3,11 @@ import { FC, memo, useCallback } from "react";
 import { Button, Form, Input } from "antd";
 
 import styles from "./style.module.scss";
-import { postLogInApi } from "@/api/services/auth";
 import { handleError } from "@/utils/helper";
 import { useRouter } from "next/router";
 import { authStorage } from "@/storage/authStorage";
 import { Role } from "@/types/commonTypes";
+import { postLogInApi } from "@/pages/api/services/auth";
 
 type Props = {};
 

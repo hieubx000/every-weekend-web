@@ -18,8 +18,8 @@ import { routerPathConstant } from "@/constants/routerConstant";
 import Slider from "@ant-design/react-slick";
 import Blogcard from "@/components/common/Blogcard";
 import { handleError } from "@/utils/helper";
-import { getAllBlogApi, getBlogBySlugApi } from "@/api/services/blog";
 import { Blog } from "@/types/common";
+import { getAllBlogApi, getBlogBySlugApi } from "@/pages/api/services/blog";
 
 type Props = {};
 

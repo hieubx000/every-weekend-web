@@ -12,11 +12,11 @@ import { User } from "@/types/common";
 import { authStorage } from "@/storage/authStorage";
 import { dateFormat } from "@/utils/patterns";
 import dayjs from "dayjs";
-import { patchUpdateProfileApi } from "@/api/services/auth";
 import { handleError } from "@/utils/helper";
 import { convertDatePickerToTimestamp } from "@/utils/converts";
 import SuccessModal from "@/components/common/Modal/SuccessModal";
 import useUserProfile from "@/hooks/useUserProfile";
+import { patchUpdateProfileApi } from "../api/services/auth";
 
 type Props = {};
 

@@ -4,7 +4,7 @@ import styles from "./style.module.scss";
 import { ITour } from "@/types/services/tour";
 import TourCard from "@/components/common/TourCard";
 import { Mock_Data_Tours } from "@/public/assets/mockData/tour";
-import { getAllTourApi } from "@/api/services/tour";
+import { getAllTourApi } from "@/pages/api/services/tour";
 
 type Props = {};
 

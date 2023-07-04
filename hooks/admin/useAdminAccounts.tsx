@@ -6,12 +6,12 @@ import { Popconfirm, Space, Tag, message } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { IBreadcrumb } from "@/components/common/CustomBreadcrumb";
 import { handleError } from "@/utils/helper";
-import { deleteUserApi, getListAccountApi } from "@/api/services/auth";
 import {
   convertEnumToProvince,
   convertTimestampToDate,
 } from "@/utils/converts";
 import ActionConfirm from "@/components/common/ActionConfirm";
+import { deleteUserApi, getListAccountApi } from "@/pages/api/services/auth";
 
 interface DataType {
   key: string;

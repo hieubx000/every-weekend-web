@@ -17,7 +17,6 @@ import { MdOutlineAirplaneTicket, MdTravelExplore } from "react-icons/md";
 import { FaHotel } from "react-icons/fa";
 import { TbReportSearch } from "react-icons/tb";
 import { airportList, provinceList } from "@/public/assets/data/intData";
-import { getAllDestinationApi } from "@/api/services/destination";
 import { handleError } from "@/utils/helper";
 import { BiSearch } from "react-icons/bi";
 import { SearchOutlined } from "@ant-design/icons";
@@ -28,6 +27,7 @@ import {
   convertDatePickerToEndDateTimestamp,
 } from "@/utils/converts";
 import dayjs from "dayjs";
+import { getAllDestinationApi } from "@/pages/api/services/destination";
 
 type Props = {};
 

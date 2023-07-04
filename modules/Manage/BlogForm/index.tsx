@@ -15,13 +15,13 @@ import {
 import axios from "axios";
 import { CloudUploadOutlined } from "@ant-design/icons";
 import { blogCategory, statusList } from "@/utils/initData";
-import { patchUpdateBlogApi, postCreateBlogApi } from "@/api/services/blog";
 
 import styles from "./style.module.scss";
 import { Blog } from "@/types/common";
 import { useRouter } from "next/router";
 import useUserProfile from "@/hooks/useUserProfile";
 import { Role } from "@/types/commonTypes";
+import { patchUpdateBlogApi, postCreateBlogApi } from "@/pages/api/services/blog";
 
 type Props = {
   blogDetail?: Blog;

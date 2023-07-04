@@ -5,7 +5,6 @@ import { MdDeleteOutline, MdOutlineModeEdit } from "react-icons/md";
 import { Button, Select, Space, Tag, message } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { IBreadcrumb } from "@/components/common/CustomBreadcrumb";
-import { deleteUserApi, getListAccountApi } from "@/api/services/auth";
 import {
   convertEnumStatusToColorTag,
   convertEnumToStatus,
@@ -14,16 +13,12 @@ import {
 } from "@/utils/converts";
 import ActionConfirm from "@/components/common/ActionConfirm";
 import { handleError } from "@/utils/helper";
-import { deleteBlogApi, getAllBlogApi } from "@/api/services/blog";
 import useUserProfile from "../useUserProfile";
-import {
-  changeStatusBookTourApi,
-  getAllBookingTourApi,
-} from "@/api/services/booking-tour";
 import { BookingTour } from "@/types/api/booking-tour";
 import { ITour } from "@/types/services/tour";
 import { Role } from "@/types/commonTypes";
 import { statusList } from "@/utils/initData";
+import { changeStatusBookTourApi, getAllBookingTourApi } from "@/pages/api/services/booking-tour";
 
 interface DataType extends BookingTour.BookingTourDataPayload {
   _id: string;

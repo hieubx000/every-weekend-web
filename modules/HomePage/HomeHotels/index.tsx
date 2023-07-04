@@ -4,10 +4,9 @@ import styles from "./style.module.scss";
 import { ITour } from "@/types/services/tour";
 import TourCard from "@/components/common/TourCard";
 import { Mock_Data_Tours } from "@/public/assets/mockData/tour";
-import { getAllTourApi } from "@/api/services/tour";
 import HotelCard from "@/components/common/HotelCard";
 import { IHotel } from "@/types/services/hotels";
-import { getAllHotelApi } from "@/api/services/hotel";
+import { getAllHotelApi } from "@/pages/api/services/hotel";
 
 type Props = {};
 

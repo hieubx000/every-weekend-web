@@ -5,8 +5,8 @@ import { IBreadcrumb } from "@/components/common/CustomBreadcrumb";
 import HotelForm from "@/modules/Manage/HotelForm";
 import { IHotel } from "@/types/services/hotels";
 import { useRouter } from "next/router";
-import { getHotelByIdApi } from "@/api/services/hotel";
 import { handleError } from "@/utils/helper";
+import { getHotelByIdApi } from "@/pages/api/services/hotel";
 
 type Props = {};
 

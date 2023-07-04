@@ -4,9 +4,9 @@ import styles from "./style.module.scss";
 import BlogForm from "@/modules/Manage/BlogForm";
 import { useRouter } from "next/router";
 import { Blog } from "@/types/common";
-import { getBlogByIdApi } from "@/api/services/blog";
 import { handleError } from "@/utils/helper";
 import MainLayout from "@/components/layouts/MainLayout";
+import { getBlogByIdApi } from "@/pages/api/services/blog";
 
 type Props = {};
 

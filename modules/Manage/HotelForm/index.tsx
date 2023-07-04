@@ -29,9 +29,9 @@ import { useManageTourForm } from "@/hooks/manage/useManageTourForm";
 import styles from "./style.module.scss";
 import { useManageHotelForm } from "@/hooks/manage/useManageHotelForm";
 import { hotelServiceList } from "@/utils/initData";
-import { patchUpdateHotelApi, postCreateHotelApi } from "@/api/services/hotel";
 import { IHotel } from "@/types/services/hotels";
 import { useRouter } from "next/router";
+import { patchUpdateHotelApi, postCreateHotelApi } from "@/pages/api/services/hotel";
 
 type Props = {
   hotelDetail?: IHotel;

@@ -7,8 +7,8 @@ import { ColumnsType } from "antd/es/table";
 import { IBreadcrumb } from "@/components/common/CustomBreadcrumb";
 import ActionConfirm from "@/components/common/ActionConfirm";
 import { handleError } from "@/utils/helper";
-import { deleteBlogApi, getAllBlogApi } from "@/api/services/blog";
-import { getAllDestinationApi } from "@/api/services/destination";
+import { deleteBlogApi } from "@/pages/api/services/blog";
+import { getAllDestinationApi } from "@/pages/api/services/destination";
 
 interface DataType {
   key: string;

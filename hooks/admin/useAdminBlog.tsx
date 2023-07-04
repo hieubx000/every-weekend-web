@@ -5,7 +5,6 @@ import { MdDeleteOutline, MdOutlineModeEdit } from "react-icons/md";
 import { Space, Tag, message } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { IBreadcrumb } from "@/components/common/CustomBreadcrumb";
-import { deleteUserApi, getListAccountApi } from "@/api/services/auth";
 import {
   convertEnumStatusToColorTag,
   convertEnumToCategory,
@@ -15,8 +14,8 @@ import {
 } from "@/utils/converts";
 import ActionConfirm from "@/components/common/ActionConfirm";
 import { handleError } from "@/utils/helper";
-import { deleteBlogApi, getAllBlogApi } from "@/api/services/blog";
 import { User } from "@/types/common";
+import { deleteBlogApi, getAllBlogApi } from "@/pages/api/services/blog";
 
 interface DataType {
   key: string;

@@ -5,7 +5,6 @@ import { MdDeleteOutline, MdOutlineModeEdit } from "react-icons/md";
 import { Space, Tag, message } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { IBreadcrumb } from "@/components/common/CustomBreadcrumb";
-import { deleteTourApi, getAllTourApi } from "@/api/services/tour";
 import ActionConfirm from "@/components/common/ActionConfirm";
 import {
   convertEnumToProvince,
@@ -14,7 +13,8 @@ import {
 import { Address, Destination, User } from "@/types/common";
 import useUserProfile from "../useUserProfile";
 import { handleError } from "@/utils/helper";
-import { getAllHotelApi } from "@/api/services/hotel";
+import { deleteTourApi } from "@/pages/api/services/tour";
+import { getAllHotelApi } from "@/pages/api/services/hotel";
 
 interface DataType {
   key: string;

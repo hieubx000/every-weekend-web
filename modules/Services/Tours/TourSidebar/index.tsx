@@ -25,11 +25,11 @@ import {
 import { dateFormat } from "@/utils/patterns";
 import classNames from "classnames";
 import { provinceList } from "@/public/assets/data/intData";
-import { getAllDestinationApi } from "@/api/services/destination";
 import { handleError } from "@/utils/helper";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
 import moment from "moment";
+import { getAllDestinationApi } from "@/pages/api/services/destination";
 
 type Props = {
   setFromDate: Dispatch<SetStateAction<number | undefined>>;

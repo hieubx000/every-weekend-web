@@ -3,8 +3,8 @@ import { useState, useCallback, useEffect } from "react";
 import { Form } from "antd";
 import { DeleteTwoTone } from "@ant-design/icons";
 import { Address } from "@/types/common";
-import { getAllDestinationApi } from "@/api/services/destination";
 import { handleError } from "@/utils/helper";
+import { getAllDestinationApi } from "@/pages/api/services/destination";
 
 const useManageHotelForm = () => {
   const [isAddAddressModal, setIsAddAddressModal] = useState(false);

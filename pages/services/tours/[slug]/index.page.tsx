@@ -14,8 +14,8 @@ import {
 import { useRouter } from "next/router";
 import { ITour } from "@/types/services/tour";
 import { handleError } from "@/utils/helper";
-import { getTourBySlugApi } from "@/api/services/tour";
 import moment from "moment";
+import { getTourBySlugApi } from "@/pages/api/services/tour";
 
 const { Panel } = Collapse;
 

@@ -15,17 +15,14 @@ import {
 import axios from "axios";
 import { CloudUploadOutlined } from "@ant-design/icons";
 import { blogCategory, statusList } from "@/utils/initData";
-import { patchUpdateBlogApi, postCreateBlogApi } from "@/api/services/blog";
 
 import styles from "./style.module.scss";
 import { Blog, Destination } from "@/types/common";
 import { useRouter } from "next/router";
 import useUserProfile from "@/hooks/useUserProfile";
 import { Role } from "@/types/commonTypes";
-import {
-  patchUpdateDestinationApi,
-  postCreateDestinationApi,
-} from "@/api/services/destination";
+import { patchUpdateDestinationApi, postCreateDestinationApi } from "@/pages/api/services/destination";
+
 
 type Props = {
   destinationDetail?: Destination;
