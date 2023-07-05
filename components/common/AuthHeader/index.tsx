@@ -11,8 +11,10 @@ const AuthHeader: FC<Props> = ({}) => {
   const router = useRouter();
 
   const pushToLogin = useCallback(() => {
-    router.push("/login");
+    router.pathname == "/login" ? router.push("/signup") : router.push("/login");
   }, []);
+
+  console.log();
 
   return (
     <div className={styles.container}>
@@ -25,7 +27,7 @@ const AuthHeader: FC<Props> = ({}) => {
         <div className={styles.header_action}>
           <Button size="large">Trang chủ</Button>
           <Button type="primary" size="large" onClick={pushToLogin}>
-            Đăng nhập
+            {router.pathname == "/login" ? "Đăng ký" : "Đăng nhập"}
           </Button>
         </div>
       </div>

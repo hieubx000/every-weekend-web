@@ -167,7 +167,7 @@ const TourForm: FC<Props> = ({ tourDetail }) => {
               title: values.title,
               imageUrl: pictureCertificate,
               about: values.about,
-              fromDate: convertDatePickerToTimestamp(values.fromDate),
+              fromDate: convertDatePickerToEndDateTimestamp(values.fromDate),
               startTime: convertDatePickerToTimestamp(values.startTime),
               beforeStartTime: convertDatePickerToTimestamp(
                 values.beforeStartTime,

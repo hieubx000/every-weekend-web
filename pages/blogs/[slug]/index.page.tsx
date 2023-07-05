@@ -133,7 +133,7 @@ const BlogDetail: FC<Props> = ({}) => {
                   </div>
                   <div style={{ marginTop: "20px" }}>
                     <span className={styles.main_wrap_body_content_detail_text}>
-                      {/* {!!blog?.content && parse(blog?.content)} */}
+                      {blog?.content}
                     </span>
                   </div>
                 </div>
