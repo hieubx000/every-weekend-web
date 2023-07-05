@@ -48,4 +48,5 @@ export interface Blog extends Blog.BlogDataPayload {
 }
 export interface Destination extends Destination.DestinationDataPayload {
   id: string;
+  _id?: string
 }
